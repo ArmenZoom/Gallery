@@ -35,9 +35,9 @@ public class GridView: UIView {
       addSubview($0)
     }
 
-    [closeButton, arrowButton].forEach {
-      topView.addSubview($0)
-    }
+//    [closeButton, arrowButton].forEach {
+//      topView.addSubview($0)
+//    }
 
     [bottomBlurView, doneButton].forEach {
         bottomView.addSubview($0)
@@ -46,7 +46,7 @@ public class GridView: UIView {
     Constraint.on(
       topView.leftAnchor.constraint(equalTo: topView.superview!.leftAnchor),
       topView.rightAnchor.constraint(equalTo: topView.superview!.rightAnchor),
-      topView.heightAnchor.constraint(equalToConstant: 40),
+      topView.heightAnchor.constraint(equalToConstant: 0),
 
       loadingIndicator.centerXAnchor.constraint(equalTo: loadingIndicator.superview!.centerXAnchor),
       loadingIndicator.centerYAnchor.constraint(equalTo: loadingIndicator.superview!.centerYAnchor)
