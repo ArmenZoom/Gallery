@@ -2,7 +2,7 @@ import UIKit
 import Photos
 import AVKit
 
-class VideosController: UIViewController {
+public class VideosController: UIViewController {
 
   lazy var gridView: GridView = self.makeGridView()
   lazy var videoBox: VideoBox = self.makeVideoBox()
@@ -26,7 +26,7 @@ class VideosController: UIViewController {
 
   // MARK: - Life cycle
 
-  override func viewDidLoad() {
+    override public func viewDidLoad() {
     super.viewDidLoad()
 
     setup()
@@ -156,11 +156,11 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
 
   // MARK: - UICollectionViewDataSource
 
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return items.count
   }
 
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: VideoCell.self), for: indexPath)
       as! VideoCell
