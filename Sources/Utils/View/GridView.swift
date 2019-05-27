@@ -31,7 +31,7 @@ public class GridView: UIView {
   // MARK: - Setup
 
   private func setup() {
-    [collectionView, bottomView, topView, emptyView, loadingIndicator].forEach {
+    [collectionView, bottomView, emptyView, loadingIndicator].forEach {
       addSubview($0)
     }
 
@@ -44,23 +44,15 @@ public class GridView: UIView {
     }
 
     Constraint.on(
-      topView.leftAnchor.constraint(equalTo: topView.superview!.leftAnchor),
-      topView.rightAnchor.constraint(equalTo: topView.superview!.rightAnchor),
-      topView.heightAnchor.constraint(equalToConstant: 0),
+//      topView.leftAnchor.constraint(equalTo: topView.superview!.leftAnchor),
+//      topView.rightAnchor.constraint(equalTo: topView.superview!.rightAnchor),
+//      topView.heightAnchor.constraint(equalToConstant: 0),
 
       loadingIndicator.centerXAnchor.constraint(equalTo: loadingIndicator.superview!.centerXAnchor),
       loadingIndicator.centerYAnchor.constraint(equalTo: loadingIndicator.superview!.centerYAnchor)
     )
 
-    if #available(iOS 11, *) {
-      Constraint.on(
-        topView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-      )
-    } else {
-      Constraint.on(
-        topView.topAnchor.constraint(equalTo: topView.superview!.topAnchor)
-      )
-    }
+
 
     bottomView.g_pinDownward()
     bottomView.g_pin(height: 80)
@@ -68,16 +60,25 @@ public class GridView: UIView {
     emptyView.g_pinEdges(view: collectionView)
     
     collectionView.g_pinDownward()
-    collectionView.g_pin(on: .top, view: topView, on: .bottom, constant: 1)
+    if #available(iOS 11, *) {
+        Constraint.on(
+            collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+        )
+    } else {
+        Constraint.on(
+            collectionView.topAnchor.constraint(equalTo: collectionView.superview!.topAnchor)
+        )
+    }
+//    collectionView.g_pin(on: .top, view: topView, on: .bottom, constant: 1)
 
     bottomBlurView.g_pinEdges()
 
-    closeButton.g_pin(on: .top)
-    closeButton.g_pin(on: .left)
-    closeButton.g_pin(size: CGSize(width: 40, height: 40))
-
-    arrowButton.g_pinCenter()
-    arrowButton.g_pin(height: 40)
+//    closeButton.g_pin(on: .top)
+//    closeButton.g_pin(on: .left)
+//    closeButton.g_pin(size: CGSize(width: 40, height: 40))
+//
+//    arrowButton.g_pinCenter()
+//    arrowButton.g_pin(height: 40)
 
     doneButton.g_pin(on: .centerY)
     doneButton.g_pin(on: .right, constant: -38)
