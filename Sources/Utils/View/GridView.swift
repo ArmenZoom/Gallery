@@ -52,23 +52,13 @@ public class GridView: UIView {
       loadingIndicator.centerYAnchor.constraint(equalTo: loadingIndicator.superview!.centerYAnchor)
     )
 
-
-
     bottomView.g_pinDownward()
     bottomView.g_pin(height: 80)
 
     emptyView.g_pinEdges(view: collectionView)
     
-    collectionView.g_pinDownward()
-    if #available(iOS 11, *) {
-        Constraint.on(
-            collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-        )
-    } else {
-        Constraint.on(
-            collectionView.topAnchor.constraint(equalTo: collectionView.superview!.topAnchor)
-        )
-    }
+    collectionView.g_pinEdges(view: self)
+
 //    collectionView.g_pin(on: .top, view: topView, on: .bottom, constant: 1)
 
     bottomBlurView.g_pinEdges()
