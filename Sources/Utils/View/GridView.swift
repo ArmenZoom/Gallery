@@ -1,7 +1,7 @@
 import UIKit
 import Photos
 
-class GridView: UIView {
+public class GridView: UIView {
 
   // MARK: - Initialization
 
