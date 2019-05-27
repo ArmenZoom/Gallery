@@ -32,9 +32,14 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
   }
 
   @objc func buttonTouched(_ button: UIButton) {
-    gallery = GalleryController()
+    gallery = GalleryController(videoDelegate: self)
     gallery.delegate = self
     Config.tabsToShow = [.videoTab]
+    Config.Grid.Dimension.cellSpacing = 10
+    Config.Grid.Dimension.lineSpacing = 10
+    Config.Grid.FrameView.fillColor = .clear
+    Config.Grid.FrameView.borderColor = .clear
+    Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
     
     present(gallery, animated: true, completion: nil)
   }
@@ -99,3 +104,10 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
   }
 }
 
+
+extension ViewController: VideosControllerDelegate {
+  func didSelectVideo(video: Video)
+  {
+    print("YEEEE")
+  }
+}
