@@ -34,7 +34,8 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
   @objc func buttonTouched(_ button: UIButton) {
     gallery = GalleryController()
     gallery.delegate = self
-
+    Config.tabsToShow = [.videoTab]
+    
     present(gallery, animated: true, completion: nil)
   }
 

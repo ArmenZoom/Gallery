@@ -24,19 +24,24 @@ class VideoCell: ImageCell {
   override func setup() {
     super.setup()
 
-    [bottomOverlay, cameraImageView, durationLabel].forEach {
+    [bottomOverlay, durationLabel].forEach {
       self.insertSubview($0, belowSubview: self.highlightOverlay)
     }
 
     bottomOverlay.g_pinDownward()
     bottomOverlay.g_pin(height: 16)
 
-    cameraImageView.g_pin(on: .left, constant: 4)
-    cameraImageView.g_pin(on: .centerY, view: durationLabel, on: .centerY)
-    cameraImageView.g_pin(size: CGSize(width: 12, height: 6))
+//    cameraImageView.g_pin(on: .left, constant: 4)
+//    cameraImageView.g_pin(on: .centerY, view: durationLabel, on: .centerY)
+//    cameraImageView.g_pin(size: CGSize(width: 12, height: 6))
 
-    durationLabel.g_pin(on: .right, constant: -4)
-    durationLabel.g_pin(on: .bottom, constant: -2)
+//    durationLabel.g_pin(on: .right, constant: -4)
+    durationLabel.g_pinCenter(view: bottomOverlay)
+//    durationLabel.g_pin(on: .bottom, constant: -2)
+    
+    self.layer.cornerRadius = 8
+    self.layer.masksToBounds = true
+    
   }
 
   // MARK: - Controls
