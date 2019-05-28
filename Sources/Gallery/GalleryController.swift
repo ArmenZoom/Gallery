@@ -7,23 +7,26 @@ public protocol GalleryControllerDelegate: class {
   func galleryController(_ controller: GalleryController, didSelectVideo video: Video)
   func galleryController(_ controller: GalleryController, requestLightbox images: [Image])
   func galleryControllerDidCancel(_ controller: GalleryController)
+    
 }
 
 public class GalleryController: UIViewController, PermissionControllerDelegate {
 
-  public weak var delegate: GalleryControllerDelegate?
-
+    public weak var delegate: GalleryControllerDelegate?
+    weak var videoDelegate: VideosControllerDelegate?
+    
   public let cart = Cart()
 
   // MARK: - Init
 
-  public required init() {
-    super.init(nibName: nil, bundle: nil)
-  }
+    public init(videoDelegate: VideosControllerDelegate? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.videoDelegate = videoDelegate
+    }
 
-  public required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+    public required convenience init?(coder aDecoder: NSCoder) {
+        self.init(videoDelegate: nil)
+    }
 
   // MARK: - Life cycle
 
@@ -63,7 +66,7 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
   func makeVideosController() -> VideosController {
     let controller = VideosController(cart: cart)
     controller.title = "Gallery.Videos.Title".g_localize(fallback: "VIDEOS")
-
+    controller.delegate = self.videoDelegate
     return controller
   }
 

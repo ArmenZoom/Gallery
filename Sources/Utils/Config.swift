@@ -69,9 +69,12 @@ public struct Config {
       public static var borderColor: UIColor = UIColor(red: 0, green: 239/255, blue: 155/255, alpha: 1)
     }
 
-    struct Dimension {
-      static let columnCount: CGFloat = 4
-      static let cellSpacing: CGFloat = 2
+    public struct Dimension {
+        public static var columnCount: CGFloat = 4
+        public static var cellSpacing: CGFloat = 2
+        public static var lineSpacing: CGFloat = 2
+
+        public static var inset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
   }
 
