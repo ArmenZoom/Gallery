@@ -35,7 +35,8 @@ struct Utils {
   static func fetchOptions() -> PHFetchOptions {
     let options = PHFetchOptions()
     options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-
+    options.predicate = NSPredicate(format: "mediaType = %d AND duration < \(Config.VideoEditor.maximumDuration)", PHAssetMediaType.video.rawValue)
+    
     return options
   }
 
