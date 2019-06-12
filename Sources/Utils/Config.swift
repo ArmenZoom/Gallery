@@ -114,7 +114,8 @@ public struct Config {
 
     public static var quality: String = AVAssetExportPresetHighestQuality
     public static var savesEditedVideoToLibrary: Bool = false
-    public static var maximumDuration: TimeInterval = 15
+    public static var maximumDuration: TimeInterval = 180
+    public static var minimumDuration: TimeInterval = 3
     public static var portraitSize: CGSize = CGSize(width: 360, height: 640)
     public static var landscapeSize: CGSize = CGSize(width: 640, height: 360)
   }
