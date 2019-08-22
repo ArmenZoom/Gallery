@@ -13,7 +13,7 @@ public class VideosController: UIViewController {
   lazy var infoLabel: UILabel = self.makeInfoLabel()
 
   var items: [Video] = []
-  let library = VideosLibrary()
+  var library = VideosLibrary()
   let once = Once()
   let cart: Cart
 
@@ -97,6 +97,16 @@ public class VideosController: UIViewController {
 //      self?.infoLabel.isHidden = duration <= Config.VideoEditor.maximumDuration
 //    }
   }
+    
+    func reloadLibrary() {
+        library = VideosLibrary()
+        library.reload {
+            self.gridView.loadingIndicator.stopAnimating()
+            self.items = self.library.items
+            self.gridView.collectionView.reloadData()
+            self.gridView.emptyView.isHidden = !self.items.isEmpty
+        }
+    }
 
   // MARK: - Controls
 
