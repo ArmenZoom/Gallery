@@ -6,7 +6,27 @@ class VideoCell: ImageCell {
   lazy var cameraImageView: UIImageView = self.makeCameraImageView()
   lazy var durationLabel: UILabel = self.makeDurationLabel()
   lazy var bottomOverlay: UIView = self.makeBottomOverlay()
-
+    lazy var selectedOverlayView: UIView = {
+        let label = UIView()
+        label.backgroundColor = UIColor.clear
+        label.layer.cornerRadius = 8
+        label.layer.masksToBounds = true
+        label.layer.borderWidth = 2
+        label.isUserInteractionEnabled = false
+        label.layer.borderColor = UIColor(red: 198/255, green: 240/255, blue: 154/255, alpha: 1.0).cgColor
+        return label
+    }()
+    
+    var choosen: Bool = false {
+        didSet {
+            if self.choosen {
+                self.addSubview(self.selectedOverlayView)
+                self.updateView()
+            } else {
+                self.selectedOverlayView.removeFromSuperview()
+            }
+        }
+    }
   // MARK: - Config
 
   func configure(_ video: Video) {
@@ -69,4 +89,13 @@ class VideoCell: ImageCell {
 
     return view
   }
+    
+    func updateView() {
+        self.selectedOverlayView.frame = self.bounds
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.updateView()
+    }
 }

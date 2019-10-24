@@ -214,6 +214,9 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
 //        cart.video = item
 //    }
 
+    if let cell = collectionView.cellForItem(at: indexPath) as? VideoCell {
+        cell.choosen = !cell.choosen
+    }
     delegate?.didSelectVideo(video: item)
     configureFrameViews()
   }
