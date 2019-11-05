@@ -19,7 +19,7 @@ public struct Config {
       }
     }
   }
-  public static var tabsToShow: [GalleryTab] = [.imageTab, .cameraTab, .videoTab]
+  public static var tabsToShow: [GalleryTab] = [.imageTab, .cameraTab, .videoTab, .videoImageTab]
   // Defaults to cameraTab if present, or whatever tab is first if cameraTab isn't present.
   public static var initialTab: GalleryTab?
   
@@ -27,6 +27,7 @@ public struct Config {
     case imageTab
     case cameraTab
     case videoTab
+    case videoImageTab
   }
 
   public struct PageIndicator {

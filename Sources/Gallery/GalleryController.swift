@@ -43,6 +43,10 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         }
     }
     
+    public func removeItem(_ video: Video) {
+        self.videoController?.unselectVideo(video)
+    }
+    
     
     public func reloadData() {
         self.cart = Cart()
@@ -97,7 +101,7 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
                 return makeImagesController()
             } else if tab == .cameraTab {
                 return makeCameraController()
-            } else if tab == .videoTab {
+            } else if tab == .videoTab || tab == .videoImageTab {
                 return makeVideosController()
             } else {
                 return nil

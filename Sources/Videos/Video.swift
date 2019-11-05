@@ -4,15 +4,18 @@ import Photos
 /// Wrap a PHAsset for video
 public class Video: Equatable {
 
-  public let asset: PHAsset
+    public let asset: PHAsset
 
-  var durationRequestID: Int = 0
-  var duration: Double = 0
+    var durationRequestID: Int = 0
+    var duration: Double = 0
+    var isVideo = true
 
   // MARK: - Initialization
 
-  init(asset: PHAsset) {
-    self.asset = asset
+   
+    init(asset: PHAsset, isVideo: Bool = true) {
+        self.asset = asset
+        self.isVideo = isVideo
   }
 
   /// Fetch video duration asynchronously

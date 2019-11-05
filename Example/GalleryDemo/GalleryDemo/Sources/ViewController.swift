@@ -8,11 +8,16 @@ import SVProgressHUD
 class ViewController: UIViewController, LightboxControllerDismissalDelegate, GalleryControllerDelegate {
 
   var button: UIButton!
+  var button2: UIButton!
   var gallery: GalleryController!
   let editor: VideoEditing = VideoEditor()
+  var videos = [Video]()
+  
+  
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     view.backgroundColor = UIColor.white
 
     Gallery.Config.VideoEditor.savesEditedVideoToLibrary = true
@@ -23,27 +28,47 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     button.addTarget(self, action: #selector(buttonTouched(_:)), for: .touchUpInside)
 
     view.addSubview(button)
+    
+     button2 = UIButton(type: .system)
+     button2.frame = CGRect(origin: CGPoint(x: view.bounds.size.width/2 - 100, y: 100), size: CGSize(width: 200, height: 100))
+     button2.setTitle("Remove Last Item", for: UIControl.State())
+     button2.addTarget(self, action: #selector(didPress(_:)), for: .touchUpInside)
+
+     view.addSubview(button2)
   }
 
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-
     button.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
   }
-
+  
+  @objc func didPress(_ button: UIButton) {
+    if let lastVideo = self.videos.last {
+        self.gallery.removeItem(lastVideo)
+        self.videos.removeLast()
+    }
+  }
+  
   @objc func buttonTouched(_ button: UIButton) {
     gallery = GalleryController(videoDelegate: self)
     gallery.delegate = self
-    Config.tabsToShow = [.videoTab]
+    Config.tabsToShow = [.videoImageTab]
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
     Config.Grid.FrameView.fillColor = .clear
     Config.Grid.FrameView.borderColor = .clear
     Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
     
-    present(gallery, animated: true, completion: nil)
+    showGallery(gallery: gallery)
   }
-
+  
+  func showGallery(gallery: GalleryController) {
+      addChild(gallery)
+      gallery.view.frame = CGRect(x: 0, y: 500, width: view.bounds.width, height: view.bounds.height-200)
+      view.addSubview(gallery.view)
+      didMove(toParent: gallery)
+      view.layoutIfNeeded()
+  }
   // MARK: - LightboxControllerDismissalDelegate
 
   func lightboxControllerWillDismiss(_ controller: LightboxController) {
@@ -108,6 +133,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
 extension ViewController: VideosControllerDelegate {
   func didSelectVideo(video: Video)
   {
-    print("YEEEE")
+    videos.append(video)
+    print("items count \(videos.count)")
   }
 }

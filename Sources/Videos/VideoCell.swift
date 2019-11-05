@@ -3,9 +3,10 @@ import Photos
 
 class VideoCell: ImageCell {
 
-  lazy var cameraImageView: UIImageView = self.makeCameraImageView()
-  lazy var durationLabel: UILabel = self.makeDurationLabel()
-  lazy var bottomOverlay: UIView = self.makeBottomOverlay()
+    lazy var cameraImageView: UIImageView = self.makeCameraImageView()
+    lazy var durationLabel: UILabel = self.makeDurationLabel()
+    lazy var bottomOverlay: UIView = self.makeBottomOverlay()
+   
     lazy var selectedOverlayView: UIView = {
         let label = UIView()
         label.backgroundColor = UIColor.clear
@@ -34,7 +35,11 @@ class VideoCell: ImageCell {
 
     video.fetchDuration { duration in
       DispatchQueue.main.async {
-        self.durationLabel.text = "\(Utils.format(duration))"
+        if duration == 0.0 {
+            self.bottomOverlay.isHidden = true
+        }
+        let text = duration == 0.0 ? nil : "\(Utils.format(duration))"
+        self.durationLabel.text = text
       }
     }
   }
