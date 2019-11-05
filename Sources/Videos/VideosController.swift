@@ -52,6 +52,11 @@ public class VideosController: UIViewController {
         self.gridView.collectionView.reloadItems(at: indexPaths)
     }
     
+    public func unselectAllVideo() {
+        self.selectedVideo.removeAll()
+        self.gridView.collectionView.reloadData()
+    }
+    
   // MARK: - Setup
 
     func setup() {

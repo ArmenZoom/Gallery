@@ -47,6 +47,9 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         self.videoController?.unselectVideo(video)
     }
     
+    public func removeAllItem() {
+        self.videoController?.unselectAllVideo()
+    }
     
     public func reloadData() {
         self.cart = Cart()
