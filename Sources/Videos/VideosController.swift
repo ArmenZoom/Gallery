@@ -187,7 +187,9 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
 
         cell.configure(item)
         cell.frameView.label.isHidden = true
-        cell.choosen = selectedVideo.contains(item)
+        if Config.VideoEditor.isBorder {
+            cell.choosen = selectedVideo.contains(item)
+        }
         
         configureFrameView(cell, indexPath: indexPath)
 
@@ -214,7 +216,7 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[(indexPath as NSIndexPath).item]
 
-        if let cell = collectionView.cellForItem(at: indexPath) as? VideoCell {
+        if let cell = collectionView.cellForItem(at: indexPath) as? VideoCell, Config.VideoEditor.isBorder {
             let isSelected = self.selectedVideo.contains(item)
             if isSelected {
                 self.selectedVideo.removeAll(where: { $0 == item })

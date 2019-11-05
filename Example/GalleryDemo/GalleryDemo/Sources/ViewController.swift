@@ -53,6 +53,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     gallery = GalleryController(videoDelegate: self)
     gallery.delegate = self
     Config.tabsToShow = [.videoImageTab]
+    Config.VideoEditor.isBorder = true
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
     Config.Grid.FrameView.fillColor = .clear
