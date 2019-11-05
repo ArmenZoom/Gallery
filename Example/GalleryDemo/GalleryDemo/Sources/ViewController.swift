@@ -30,7 +30,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     view.addSubview(button)
     
      button2 = UIButton(type: .system)
-     button2.frame = CGRect(origin: CGPoint(x: view.bounds.size.width/2 - 100, y: 100), size: CGSize(width: 200, height: 100))
+     button2.frame = CGRect(origin: CGPoint(x: view.bounds.size.width/2 - 100, y: 100), size: CGSize(width: 200, height: 50))
      button2.setTitle("Remove Last Item", for: UIControl.State())
      button2.addTarget(self, action: #selector(didPress(_:)), for: .touchUpInside)
 
@@ -65,7 +65,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
   
   func showGallery(gallery: GalleryController) {
       addChild(gallery)
-      gallery.view.frame = CGRect(x: 0, y: 500, width: view.bounds.width, height: view.bounds.height-200)
+      gallery.view.frame = CGRect(x: 0, y: 200, width: view.bounds.width, height: view.bounds.height-200)
       view.addSubview(gallery.view)
       didMove(toParent: gallery)
       view.layoutIfNeeded()
@@ -135,6 +135,9 @@ extension ViewController: VideosControllerDelegate {
   func didSelectVideo(video: Video)
   {
     videos.append(video)
+    video.customFetch { (originalImage, asset, thumbnailImage) in
+      print("item  originalImage = \(originalImage == nil), asset = \(asset == nil), thumbnailImage = \(thumbnailImage == nil)")
+    }
     print("items count \(videos.count)")
   }
 }

@@ -99,6 +99,45 @@ public class Video: Equatable {
            completion(image)
        }
     }
+    
+    public func customFetch(completion: @escaping (_ originalImage: UIImage?, _ asset: AVAsset?, _ thumbnailImage: UIImage? ) -> Void) {
+        
+        var image: UIImage?
+        var asset: AVAsset?
+        var originalImage: UIImage?
+        var isAdded = false
+        
+        self.fetchThumbnail { (thumbnailImage ) in
+             image = thumbnailImage
+             if let img = thumbnailImage, !isAdded {
+                if let ast = asset {
+                    isAdded = true
+                    completion(nil, ast, img)
+                } else if let orImage = originalImage {
+                    isAdded = true
+                    completion(orImage, nil, img)
+                }
+             }
+         }
+         
+         if self.isVideo {
+             self.fetchAVAsset { (avasset) in
+                 asset = avasset
+                 if let img = image, let ast = avasset, !isAdded {
+                     isAdded = true
+                     completion(nil, ast, img)
+                 }
+             }
+         } else {
+            self.resolve { (originImage) in
+                 originalImage = originImage
+                 if let img = originImage, let thumbnail = image, !isAdded {
+                    isAdded = true
+                    completion(img, nil, thumbnail)
+                 }
+             }
+         }
+    }
 
   // MARK: - Helper
 
