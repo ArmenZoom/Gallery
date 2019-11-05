@@ -8,7 +8,7 @@ public class Video: Equatable {
 
     var durationRequestID: Int = 0
     var duration: Double = 0
-    var isVideo = true
+    public var isVideo = true
 
   // MARK: - Initialization
 
@@ -74,20 +74,31 @@ public class Video: Equatable {
   ///
   /// - Parameter size: The preferred size
   /// - Parameter completion: Called when finish
-  public func fetchThumbnail(size: CGSize = CGSize(width: 100, height: 100), completion: @escaping (UIImage?) -> Void) {
-    let options = PHImageRequestOptions()
-    options.isNetworkAccessAllowed = true
+    public func fetchThumbnail(size: CGSize = CGSize(width: 100, height: 100), completion: @escaping (UIImage?) -> Void) {
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
 
-    PHImageManager.default().requestImage(
-      for: asset,
-      targetSize: size,
-      contentMode: .aspectFill,
-      options: options) { image, _ in
-        DispatchQueue.main.async {
-          completion(image)
+        PHImageManager.default().requestImage( for: asset, targetSize: size, contentMode: .aspectFill, options: options) { image, _ in
+            DispatchQueue.main.async {
+                completion(image)
+            }
         }
     }
-  }
+    
+    public func resolve(completion: @escaping (UIImage?) -> Void) {
+       let options = PHImageRequestOptions()
+       options.isNetworkAccessAllowed = true
+       options.deliveryMode = .highQualityFormat
+
+       let targetSize = CGSize(
+         width: asset.pixelWidth,
+         height: asset.pixelHeight
+       )
+
+       PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .default, options: options) { (image, _) in
+           completion(image)
+       }
+    }
 
   // MARK: - Helper
 
