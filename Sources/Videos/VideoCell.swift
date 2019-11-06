@@ -8,14 +8,14 @@ class VideoCell: ImageCell {
     lazy var bottomOverlay: UIView = self.makeBottomOverlay()
    
     lazy var selectedOverlayView: UIView = {
-        let label = UIView()
-        label.backgroundColor = UIColor.clear
-        label.layer.cornerRadius = 8
-        label.layer.masksToBounds = true
-        label.layer.borderWidth = 2
-        label.isUserInteractionEnabled = false
-        label.layer.borderColor = UIColor(red: 198/255, green: 240/255, blue: 154/255, alpha: 1.0).cgColor
-        return label
+        let view = UIView()
+        view.backgroundColor = UIColor.clear
+        view.layer.cornerRadius = 8
+        view.layer.masksToBounds = true
+        view.layer.borderWidth = 3
+        view.isUserInteractionEnabled = false
+        view.layer.borderColor = UIColor(red: 252/255, green: 17/255, blue: 83/255, alpha: 1.0).cgColor
+        return view
     }()
     
     var choosen: Bool = false {
