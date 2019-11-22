@@ -32,10 +32,13 @@ class VideoCell: ImageCell {
 
   func configure(_ video: Video) {
     super.configure(video.asset)
-
+    
+    DispatchQueue.main.async {
+        self.bottomOverlay.isHidden = !video.isVideo
+    }
+    
     video.fetchDuration { duration in
       DispatchQueue.main.async {
-        self.bottomOverlay.isHidden = duration == 0.0
         let text = duration == 0.0 ? nil : "\(Utils.format(duration))"
         self.durationLabel.text = text
       }
