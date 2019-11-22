@@ -35,9 +35,7 @@ class VideoCell: ImageCell {
 
     video.fetchDuration { duration in
       DispatchQueue.main.async {
-        if duration == 0.0 {
-            self.bottomOverlay.isHidden = true
-        }
+        self.bottomOverlay.isHidden = duration == 0.0
         let text = duration == 0.0 ? nil : "\(Utils.format(duration))"
         self.durationLabel.text = text
       }
