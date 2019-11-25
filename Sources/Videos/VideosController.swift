@@ -67,15 +67,15 @@ public class VideosController: UIViewController {
 
         gridView.g_pinEdges()
 
-        gridView.closeButton.addTarget(self, action: #selector(closeButtonTouched(_:)), for: .touchUpInside)
-        gridView.doneButton.addTarget(self, action: #selector(doneButtonTouched(_:)), for: .touchUpInside)
+//        gridView.closeButton.addTarget(self, action: #selector(closeButtonTouched(_:)), for: .touchUpInside)
+//        gridView.doneButton.addTarget(self, action: #selector(doneButtonTouched(_:)), for: .touchUpInside)
 
         gridView.collectionView.dataSource = self
         gridView.collectionView.delegate = self
         gridView.collectionView.register(VideoCell.self, forCellWithReuseIdentifier: String(describing: VideoCell.self))
 
-        gridView.arrowButton.updateText("Gallery.AllVideos".g_localize(fallback: "ALL VIDEOS"))
-        gridView.arrowButton.arrow.isHidden = true
+//        gridView.arrowButton.updateText("Gallery.AllVideos".g_localize(fallback: "ALL VIDEOS"))
+//        gridView.arrowButton.arrow.isHidden = true
   }
 
   // MARK: - Action
@@ -92,19 +92,19 @@ public class VideosController: UIViewController {
 
     func refreshView() {
     
-//    if let selectedItem = cart.video {
-//      videoBox.imageView.g_loadImage(selectedItem.asset)
-//    } else {
-//      videoBox.imageView.image = nil
-//    }
+        if let selectedItem = cart.video {
+          videoBox.imageView.g_loadImage(selectedItem.asset)
+        } else {
+          videoBox.imageView.image = nil
+        }
 
-//    let hasVideo = (cart.video != nil)
-//    gridView.bottomView.g_fade(visible: hasVideo)
-//    gridView.collectionView.g_updateBottomInset(hasVideo ? gridView.bottomView.frame.size.height : 0)
+    //    let hasVideo = (cart.video != nil)
+    //    gridView.bottomView.g_fade(visible: hasVideo)
+    //    gridView.collectionView.g_updateBottomInset(hasVideo ? gridView.bottomView.frame.size.height : 0)
 
-//    cart.video?.fetchDuration { [weak self] duration in
-//      self?.infoLabel.isHidden = duration <= Config.VideoEditor.maximumDuration
-//    }
+        cart.video?.fetchDuration { [weak self] duration in
+          self?.infoLabel.isHidden = duration <= Config.VideoEditor.maximumDuration
+        }
     }
     
     func reloadLibrary() {
@@ -114,6 +114,7 @@ public class VideosController: UIViewController {
             self.items = self.library.items
             self.gridView.collectionView.reloadData()
             self.gridView.emptyView.isHidden = !self.items.isEmpty
+            self.gridView.refreshFinished()
         }
     }
     
@@ -122,7 +123,8 @@ public class VideosController: UIViewController {
 
     func makeGridView() -> GridView {
         let view = GridView()
-        view.bottomView.alpha = 0
+        view.delegate = self
+//        view.bottomView.alpha = 0
     
         return view
     }
@@ -141,6 +143,12 @@ public class VideosController: UIViewController {
         label.text = String(format: "Gallery.Videos.MaxiumDuration".g_localize(fallback: "FIRST %d SECONDS"), (Int(Config.VideoEditor.maximumDuration)))
 
         return label
+    }
+}
+
+extension VideosController: GridViewDelegate {
+    func reloadCollectionView() {
+        self.reloadLibrary()
     }
 }
 

@@ -59,7 +59,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     Config.Grid.FrameView.fillColor = .clear
     Config.Grid.FrameView.borderColor = .clear
     Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
-    
+    Config.RefreshControl.isActive = false
     showGallery(gallery: gallery)
   }
   

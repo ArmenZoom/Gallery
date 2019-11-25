@@ -121,4 +121,9 @@ public struct Config {
     public static var landscapeSize: CGSize = CGSize(width: 640, height: 360)
     public static var isBorder: Bool = false
   }
+    
+    public struct RefreshControl {
+        public static var isActive = false
+        public static var color = UIColor.gray
+    }
 }
