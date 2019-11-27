@@ -114,7 +114,15 @@ public class VideosController: UIViewController {
             self.items = self.library.items
             self.gridView.collectionView.reloadData()
             self.gridView.emptyView.isHidden = !self.items.isEmpty
-            self.gridView.refreshFinished()
+        }
+    }
+    
+    func updateLibrary() {
+        library.reload {
+            self.gridView.loadingIndicator.stopAnimating()
+            self.items = self.library.items
+            self.gridView.collectionView.reloadData()
+            self.gridView.emptyView.isHidden = !self.items.isEmpty
         }
     }
     
@@ -148,7 +156,7 @@ public class VideosController: UIViewController {
 
 extension VideosController: GridViewDelegate {
     func reloadCollectionView() {
-        self.reloadLibrary()
+        self.updateLibrary()
     }
 }
 

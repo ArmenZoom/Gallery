@@ -8,7 +8,7 @@ import SVProgressHUD
 class ViewController: UIViewController, LightboxControllerDismissalDelegate, GalleryControllerDelegate {
 
   var button: UIButton!
-  var button2: UIButton!
+//  var button2: UIButton!
   var gallery: GalleryController!
   let editor: VideoEditing = VideoEditor()
   var videos = [Video]()
@@ -29,12 +29,12 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
 
     view.addSubview(button)
     
-     button2 = UIButton(type: .system)
-     button2.frame = CGRect(origin: CGPoint(x: view.bounds.size.width/2 - 100, y: 100), size: CGSize(width: 200, height: 50))
-     button2.setTitle("Remove Last Item", for: UIControl.State())
-     button2.addTarget(self, action: #selector(didPress(_:)), for: .touchUpInside)
-
-     view.addSubview(button2)
+//     button2 = UIButton(type: .system)
+//     button2.frame = CGRect(origin: CGPoint(x: view.bounds.size.width/2 - 100, y: 100), size: CGSize(width: 200, height: 50))
+//     button2.setTitle("Remove Last Item", for: UIControl.State())
+//     button2.addTarget(self, action: #selector(didPress(_:)), for: .touchUpInside)
+//
+//     view.addSubview(button2)
   }
 
   override func viewDidLayoutSubviews() {
@@ -42,12 +42,12 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     button.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
   }
   
-  @objc func didPress(_ button: UIButton) {
-    if let lastVideo = self.videos.last {
-        self.gallery.removeItem(lastVideo)
-        self.videos.removeLast()
-    }
-  }
+//  @objc func didPress(_ button: UIButton) {
+//    if let lastVideo = self.videos.last {
+//        self.gallery.removeItem(lastVideo)
+//        self.videos.removeLast()
+//    }
+//  }
   
   @objc func buttonTouched(_ button: UIButton) {
     gallery = GalleryController(videoDelegate: self)
@@ -59,13 +59,13 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     Config.Grid.FrameView.fillColor = .clear
     Config.Grid.FrameView.borderColor = .clear
     Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
-    Config.RefreshControl.isActive = false
+    Config.RefreshControl.isActive = true
     showGallery(gallery: gallery)
   }
   
   func showGallery(gallery: GalleryController) {
       addChild(gallery)
-      gallery.view.frame = CGRect(x: 0, y: 200, width: view.bounds.width, height: view.bounds.height-200)
+      gallery.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
       view.addSubview(gallery.view)
       didMove(toParent: gallery)
       view.layoutIfNeeded()

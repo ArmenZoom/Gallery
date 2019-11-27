@@ -63,26 +63,27 @@ public class GridView: UIView {
 
         collectionView.g_pinEdges(view: self)
 
+        collectionView.alwaysBounceVertical = true
+        refreshControl.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         refreshControl.tintColor = Config.RefreshControl.color
         refreshControl.addTarget(self, action: #selector(refreshWeatherData(_:)), for: .valueChanged)
 
         if Config.RefreshControl.isActive {
-            if #available(iOS 10.0, *) {
-                collectionView.refreshControl = refreshControl
-            } else {
-                collectionView.addSubview(refreshControl)
-            }
+            collectionView.addSubview(refreshControl)
         }
         
     }
 
-       
     @objc private func refreshWeatherData(_ sender: Any) {
-        delegate?.reloadCollectionView()
-    }
-        
-    public func refreshFinished() {
-        self.refreshControl.endRefreshing()
+        if refreshControl.isRefreshing {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                self.delegate?.reloadCollectionView()
+                self.refreshControl.endRefreshing()
+            })
+
+        } else {
+            self.refreshControl.endRefreshing()
+        }
     }
 
     // MARK: - Controls
