@@ -102,9 +102,12 @@ public class VideosController: UIViewController {
     //    gridView.bottomView.g_fade(visible: hasVideo)
     //    gridView.collectionView.g_updateBottomInset(hasVideo ? gridView.bottomView.frame.size.height : 0)
 
-        cart.video?.fetchDuration { [weak self] duration in
-          self?.infoLabel.isHidden = duration <= Config.VideoEditor.maximumDuration
-        }
+     
+        let duration = cart.video?.duration ?? 0.00
+        self.infoLabel.isHidden = duration <= Config.VideoEditor.maximumDuration
+//        cart.video?.fetchDuration { [weak self] duration in
+//
+//        }
     }
     
     func reloadLibrary() {
@@ -161,17 +164,16 @@ extension VideosController: GridViewDelegate {
 }
 
 extension VideosController: PageAware {
-
-  func pageDidShow() {
-    once.run {
-      library.reload {
-        self.gridView.loadingIndicator.stopAnimating()
-        self.items = self.library.items
-        self.gridView.collectionView.reloadData()
-        self.gridView.emptyView.isHidden = !self.items.isEmpty
-      }
+    func pageDidShow() {
+        once.run {
+            library.reload {
+                self.gridView.loadingIndicator.stopAnimating()
+                self.items = self.library.items
+                self.gridView.collectionView.reloadData()
+                self.gridView.emptyView.isHidden = !self.items.isEmpty
+            }
+        }
     }
-  }
 }
 
 extension VideosController: VideoBoxDelegate {

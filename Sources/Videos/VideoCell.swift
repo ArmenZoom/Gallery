@@ -28,71 +28,66 @@ class VideoCell: ImageCell {
             }
         }
     }
-  // MARK: - Config
+  
+    // MARK: - Config
 
-  func configure(_ video: Video) {
-    super.configure(video.asset)
-    
-    self.bottomOverlay.isHidden = !video.isVideo
-    
-    video.fetchDuration { duration in
-      DispatchQueue.main.async {
-        let text = duration == 0.0 ? nil : "\(Utils.format(duration))"
+    func configure(_ video: Video) {
+        super.configure(video.asset)
+        self.bottomOverlay.isHidden = !video.isVideo
+        
+        let text = video.duration == 0.0 ? nil : "\(Utils.format(video.duration))"
         self.durationLabel.text = text
-      }
-    }
-  }
-
-  // MARK: - Setup
-
-  override func setup() {
-    super.setup()
-
-    [bottomOverlay, durationLabel].forEach {
-      self.insertSubview($0, belowSubview: self.highlightOverlay)
     }
 
-    bottomOverlay.g_pinDownward()
-    bottomOverlay.g_pin(height: 16)
+    // MARK: - Setup
+
+    override func setup() {
+        super.setup()
+        [bottomOverlay, durationLabel].forEach {
+            self.insertSubview($0, belowSubview: self.highlightOverlay)
+        }
+
+        bottomOverlay.g_pinDownward()
+        bottomOverlay.g_pin(height: 16)
 
 //    cameraImageView.g_pin(on: .left, constant: 4)
 //    cameraImageView.g_pin(on: .centerY, view: durationLabel, on: .centerY)
 //    cameraImageView.g_pin(size: CGSize(width: 12, height: 6))
 
-//    durationLabel.g_pin(on: .right, constant: -4)
-    durationLabel.g_pinCenter(view: bottomOverlay)
-//    durationLabel.g_pin(on: .bottom, constant: -2)
+//        durationLabel.g_pin(on: .right, constant: -4)
+        durationLabel.g_pinCenter(view: bottomOverlay)
+//        durationLabel.g_pin(on: .bottom, constant: -2)
     
-    self.layer.cornerRadius = 8
-    self.layer.masksToBounds = true
+        self.layer.cornerRadius = 8
+        self.layer.masksToBounds = true
     
-  }
+    }
 
-  // MARK: - Controls
+    // MARK: - Controls
 
-  func makeCameraImageView() -> UIImageView {
-    let imageView = UIImageView()
-    imageView.image = GalleryBundle.image("gallery_video_cell_camera")
-    imageView.contentMode = .scaleAspectFit
+    func makeCameraImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.image = GalleryBundle.image("gallery_video_cell_camera")
+        imageView.contentMode = .scaleAspectFit
 
-    return imageView
-  }
+        return imageView
+    }
 
-  func makeDurationLabel() -> UILabel {
-    let label = UILabel()
-    label.font = Config.Font.Text.bold.withSize(9)
-    label.textColor = UIColor.white
-    label.textAlignment = .right
+    func makeDurationLabel() -> UILabel {
+        let label = UILabel()
+        label.font = Config.Font.Text.bold.withSize(9)
+        label.textColor = UIColor.white
+        label.textAlignment = .right
 
-    return label
-  }
+        return label
+    }
 
-  func makeBottomOverlay() -> UIView {
-    let view = UIView()
-    view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+    func makeBottomOverlay() -> UIView {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
 
-    return view
-  }
+        return view
+    }
     
     func updateView() {
         self.selectedOverlayView.frame = self.bounds
@@ -102,4 +97,5 @@ class VideoCell: ImageCell {
         super.layoutSubviews()
         self.updateView()
     }
+    
 }

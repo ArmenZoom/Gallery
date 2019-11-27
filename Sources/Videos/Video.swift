@@ -9,7 +9,7 @@ public class Video: Equatable {
     public let id: String
 
     var durationRequestID: Int = 0
-    var duration: Double = 0
+    public var duration: Double
     public var isVideo = true
 
   // MARK: - Initialization
@@ -19,35 +19,36 @@ public class Video: Equatable {
         self.id = asset.localIdentifier
         self.asset = asset
         self.isVideo = isVideo
+        self.duration = asset.duration
   }
 
   /// Fetch video duration asynchronously
   ///
   /// - Parameter completion: Called when finish
-  func fetchDuration(_ completion: @escaping (Double) -> Void) {
-    guard duration == 0
-    else {
-      DispatchQueue.main.async {
-        completion(self.duration)
-      }
-      return
-    }
-
-    if durationRequestID != 0 {
-      PHImageManager.default().cancelImageRequest(PHImageRequestID(durationRequestID))
-    }
-
-    let id = PHImageManager.default().requestAVAsset(forVideo: asset, options: videoOptions) {
-      asset, mix, _ in
-
-      self.duration = asset?.duration.seconds ?? 0
-      DispatchQueue.main.async {
-        completion(self.duration)
-      }
-    }
-
-    durationRequestID = Int(id)
-  }
+//  func fetchDuration(_ completion: @escaping (Double) -> Void) {
+//    guard duration == 0
+//    else {
+//      DispatchQueue.main.async {
+//        completion(self.duration)
+//      }
+//      return
+//    }
+//
+//    if durationRequestID != 0 {
+//      PHImageManager.default().cancelImageRequest(PHImageRequestID(durationRequestID))
+//    }
+//
+//    let id = PHImageManager.default().requestAVAsset(forVideo: asset, options: videoOptions) {
+//      asset, mix, _ in
+//
+//      self.duration = asset?.duration.seconds ?? 0
+//      DispatchQueue.main.async {
+//        completion(self.duration)
+//      }
+//    }
+//
+//    durationRequestID = Int(id)
+//  }
 
   /// Fetch AVPlayerItem asynchronoulys
   ///
