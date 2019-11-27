@@ -5,6 +5,8 @@ import Photos
 public class Video: Equatable {
 
     public let asset: PHAsset
+    
+    public let id: String
 
     var durationRequestID: Int = 0
     var duration: Double = 0
@@ -14,6 +16,7 @@ public class Video: Equatable {
 
    
     init(asset: PHAsset, isVideo: Bool = true) {
+        self.id = asset.localIdentifier
         self.asset = asset
         self.isVideo = isVideo
   }
