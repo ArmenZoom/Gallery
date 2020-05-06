@@ -4,7 +4,12 @@ protocol PageAware: class {
     func pageDidShow()
 }
 
+public protocol PagesControllerDelegate: class {
+    func didChangePageIndex(index: Int)
+}
+
 class PagesController: UIViewController {
+    weak var delegate: PagesControllerDelegate?
     
     let controllers: [UIViewController]
     
@@ -161,6 +166,7 @@ class PagesController: UIViewController {
         
         selectedIndex = index
         notify()
+        self.delegate?.didChangePageIndex(index: index)
     }
     
     func notify() {

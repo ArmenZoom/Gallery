@@ -2,18 +2,20 @@ import UIKit
 import AVFoundation
 
 public protocol GalleryControllerDelegate: class {
-
-  func galleryController(_ controller: GalleryController, didSelectImages images: [Image])
-  func galleryController(_ controller: GalleryController, didSelectVideo video: Video)
-  func galleryController(_ controller: GalleryController, requestLightbox images: [Image])
-  func galleryControllerDidCancel(_ controller: GalleryController)
     
+    func galleryController(_ controller: GalleryController, didSelectImages images: [Image])
+    func galleryController(_ controller: GalleryController, didSelectVideo video: Video)
+    func galleryController(_ controller: GalleryController, requestLightbox images: [Image])
+    func galleryControllerDidCancel(_ controller: GalleryController)    
 }
 
 public class GalleryController: UIViewController, PermissionControllerDelegate {
-
+    
     public weak var delegate: GalleryControllerDelegate?
+    
     weak var videoDelegate: VideosControllerDelegate?
+    weak var imageDelegate: ImageControllerDelegate?
+    weak var pagesDelegate: PagesControllerDelegate?
     
     public var cart = Cart()
     
@@ -23,13 +25,19 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
     
     // MARK: - Init
     
-    public init(videoDelegate: VideosControllerDelegate? = nil) {
+    public init(videoDelegate: VideosControllerDelegate? = nil,
+                imageDelegate: ImageControllerDelegate?  = nil,
+                pagesDelegate: PagesControllerDelegate?  = nil) {
+        
         super.init(nibName: nil, bundle: nil)
+        
         self.videoDelegate = videoDelegate
+        self.imageDelegate = imageDelegate
+        self.pagesDelegate = pagesDelegate
     }
-
+    
     public required convenience init?(coder aDecoder: NSCoder) {
-        self.init(videoDelegate: nil)
+        self.init(videoDelegate: nil, imageDelegate: nil, pagesDelegate: nil)
     }
     
     // MARK: - Life cycle
@@ -78,7 +86,7 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
     func makeImagesController() -> ImagesController {
         let controller = ImagesController(cart: cart)
         controller.title = "Gallery.Images.Title".g_localize(fallback: "PHOTOS")
-        
+        controller.delegate = self.imageDelegate
         return controller
     }
     
@@ -94,7 +102,7 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         controller.title = "Gallery.Videos.Title".g_localize(fallback: "VIDEOS")
         controller.delegate = self.videoDelegate
         videoController = controller
-
+        
         return controller
     }
     
@@ -124,6 +132,7 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         }
         
         pagesController = PagesController(controllers: controllers)
+        pagesController?.delegate = self.pagesDelegate
         pagesController?.selectedIndex = tabsToShow.index(of: Config.initialTab ?? .cameraTab) ?? 0
         
         return pagesController

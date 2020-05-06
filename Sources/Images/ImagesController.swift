@@ -1,7 +1,13 @@
 import UIKit
 import Photos
 
+public protocol ImageControllerDelegate: class {
+    func didAddImage(image: Image)
+    func didRemoveImage(image: Image)
+}
+
 class ImagesController: UIViewController {
+    weak var delegate: ImageControllerDelegate?
     
     lazy var dropdownController: DropdownController = self.makeDropdownController()
     lazy var gridView: GridView = self.makeGridView()
@@ -131,6 +137,7 @@ extension ImagesController: PageAware {
 extension ImagesController: CartDelegate {
     
     func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool) {
+        self.delegate?.didRemoveImage(image: image)
         stackView.reload(cart.images, added: true)
         refreshView()
         
@@ -140,6 +147,7 @@ extension ImagesController: CartDelegate {
     }
     
     func cart(_ cart: Cart, didRemove image: Image) {
+        self.delegate?.didRemoveImage(image: image)
         stackView.reload(cart.images)
         refreshView()
     }
@@ -194,7 +202,7 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return Config.Grid.Dimension.inset
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return Config.Grid.Dimension.lineSpacing
     }
