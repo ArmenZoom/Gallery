@@ -52,7 +52,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
   @objc func buttonTouched(_ button: UIButton) {
     gallery = GalleryController(videoDelegate: self)
     gallery.delegate = self
-    Config.tabsToShow = [.videoImageTab]
+    Config.tabsToShow = [.imageTab, .videoTab]
     Config.VideoEditor.isBorder = true
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
@@ -60,6 +60,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     Config.Grid.FrameView.borderColor = .clear
     Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
     Config.RefreshControl.isActive = true
+    Config.PageIndicator.isEnable = false
     showGallery(gallery: gallery)
   }
   
@@ -131,13 +132,22 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
 }
 
 
+
 extension ViewController: VideosControllerDelegate {
-  func didSelectVideo(video: Video)
-  {
-    videos.append(video)
-    video.customFetch { (originalImage, asset, thumbnailImage) in
-      print("item  originalImage = \(originalImage == nil), asset = \(asset == nil), thumbnailImage = \(thumbnailImage == nil)")
+ 
+  func didSelectVideo(video: Video) {
+   
+    video.fetchURL { (url) in
+     
+      if let outURL = url {
+       
+        DispatchQueue.main.async {
+          
+          print(url)
+        
+        }
+      }
+      
     }
-    print("items count \(videos.count)")
   }
 }

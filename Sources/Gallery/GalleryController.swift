@@ -17,6 +17,10 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
     
     public var cart = Cart()
     
+    var videoController: VideosController?
+    var pagesController: PagesController?
+    
+    
     // MARK: - Init
     
     public init(videoDelegate: VideosControllerDelegate? = nil) {
@@ -40,6 +44,12 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         } else {
             let permissionController = makePermissionController()
             g_addChildController(permissionController)
+        }
+    }
+    
+    public func changePagesIndex(_ index: Int) {
+        if let pagesController = self.pagesController {
+            pagesController.didChangeSlectedIndex(index)
         }
     }
     
@@ -79,8 +89,6 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         return controller
     }
     
-    var videoController: VideosController?
-    
     func makeVideosController() -> VideosController {
         let controller = VideosController(cart: cart)
         controller.title = "Gallery.Videos.Title".g_localize(fallback: "VIDEOS")
@@ -115,10 +123,10 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
             return nil
         }
         
-        let controller = PagesController(controllers: controllers)
-        controller.selectedIndex = tabsToShow.index(of: Config.initialTab ?? .cameraTab) ?? 0
+        pagesController = PagesController(controllers: controllers)
+        pagesController?.selectedIndex = tabsToShow.index(of: Config.initialTab ?? .cameraTab) ?? 0
         
-        return controller
+        return pagesController
     }
     
     func makePermissionController() -> PermissionController {
