@@ -137,7 +137,7 @@ extension ImagesController: PageAware {
 extension ImagesController: CartDelegate {
     
     func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool) {
-        self.delegate?.didRemoveImage(image: image)
+        self.delegate?.didAddImage(image: image)
         stackView.reload(cart.images, added: true)
         refreshView()
         
