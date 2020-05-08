@@ -37,6 +37,14 @@ public struct Config {
         
     }
     
+    public struct SelectedView {
+        public static var isEnabled: Bool = false
+        
+        public static var imageLimit: Int = 0
+        public static var videoLimit: Int = 0
+        public static var allLimit: Int = Int.max
+    }
+    
     public struct Camera {
         
         public static var recordLocation: Bool = false
@@ -50,11 +58,8 @@ public struct Config {
         }
         
         public struct StackView {
-            public static let imageCount: Int = 4
+            public static var imageCount: Int = 4
         }
-        
-        public static var imageLimit: Int = 0
-        
     }
     
     public struct Grid {
@@ -127,5 +132,10 @@ public struct Config {
     public struct RefreshControl {
         public static var isActive = false
         public static var color = UIColor.gray
+    }
+    
+    
+    public struct CellSelectedStyle {
+        public static var isEnabled = true
     }
 }

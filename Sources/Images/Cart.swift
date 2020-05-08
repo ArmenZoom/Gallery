@@ -4,6 +4,10 @@ import Photos
 public protocol CartDelegate: class {
     func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool)
     func cart(_ cart: Cart, didRemove image: Image)
+    
+    func cart(_ cart: Cart, didAdd video: Video, newlyTaken: Bool)
+    func cart(_ cart: Cart, didRemove video: Video)
+    
     func cartDidReload(_ cart: Cart)
 }
 
@@ -11,7 +15,11 @@ public protocol CartDelegate: class {
 public class Cart {
     
     public var images: [Image] = []
-    public var video: Video?
+    public var videos: [Video] = []
+    
+    public var allItemsCount: Int {
+        return images.count + videos.count
+    }
     var delegates: NSHashTable<AnyObject> = NSHashTable.weakObjects()
     
     // MARK: - Initialization
@@ -29,7 +37,7 @@ public class Cart {
     // MARK: - Logic
     
     public func add(_ image: Image, newlyTaken: Bool = false) {
-        guard !images.contains(image) else { return }
+        if images.contains(image) && Config.CellSelectedStyle.isEnabled { return }
         
         images.append(image)
         
@@ -48,9 +56,46 @@ public class Cart {
         }
     }
     
-    public func reload(_ images: [Image]) {
+    
+    public func reload( images: [Image]) {
         self.images = images
         
+        for case let delegate as CartDelegate in delegates.allObjects {
+            delegate.cartDidReload(self)
+        }
+    }
+    
+    
+    public func add(_ video: Video, newlyTaken: Bool = false) {
+        if videos.contains(video) && Config.CellSelectedStyle.isEnabled { return }
+        
+        videos.append(video)
+        
+        for case let delegate as CartDelegate in delegates.allObjects {
+            delegate.cart(self, didAdd: video, newlyTaken: newlyTaken)
+        }
+    }
+    
+    public func remove(_ video: Video) {
+        guard let index = videos.index(of: video) else { return }
+        
+        videos.remove(at: index)
+        
+        for case let delegate as CartDelegate in delegates.allObjects {
+            delegate.cart(self, didRemove: video)
+        }
+    }
+    
+    
+    public func reload(videos: [Video]) {
+        self.videos = videos
+        
+        for case let delegate as CartDelegate in delegates.allObjects {
+            delegate.cartDidReload(self)
+        }
+    }
+    
+    public func reload() {
         for case let delegate as CartDelegate in delegates.allObjects {
             delegate.cartDidReload(self)
         }
@@ -59,8 +104,8 @@ public class Cart {
     // MARK: - Reset
     
     public func reset() {
-        video = nil
-        images.removeAll()
+        videos = []
+        images = []
         delegates.removeAllObjects()
     }
 }

@@ -68,7 +68,7 @@ class StackView: UIControl{
     indicator.startAnimating()
     UIView.animate(withDuration: 0.3, animations: {
       self.indicator.alpha = 1.0
-    }) 
+    })
   }
 
   func stopLoading() {

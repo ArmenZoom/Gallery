@@ -5,15 +5,12 @@ import AVFoundation
 import AVKit
 import SVProgressHUD
 
-class ViewController: UIViewController, LightboxControllerDismissalDelegate, GalleryControllerDelegate {
+class ViewController: UIViewController, LightboxControllerDismissalDelegate {
   
   var button: UIButton!
-  //  var button2: UIButton!
   var gallery: GalleryController!
   let editor: VideoEditing = VideoEditor()
   var videos = [Video]()
-  
-  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -28,26 +25,12 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     button.addTarget(self, action: #selector(buttonTouched(_:)), for: .touchUpInside)
     
     view.addSubview(button)
-    
-    //     button2 = UIButton(type: .system)
-    //     button2.frame = CGRect(origin: CGPoint(x: view.bounds.size.width/2 - 100, y: 100), size: CGSize(width: 200, height: 50))
-    //     button2.setTitle("Remove Last Item", for: UIControl.State())
-    //     button2.addTarget(self, action: #selector(didPress(_:)), for: .touchUpInside)
-    //
-    //     view.addSubview(button2)
   }
   
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     button.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
   }
-  
-  //  @objc func didPress(_ button: UIButton) {
-  //    if let lastVideo = self.videos.last {
-  //        self.gallery.removeItem(lastVideo)
-  //        self.videos.removeLast()
-  //    }
-  //  }
   
   @objc func buttonTouched(_ button: UIButton) {
     gallery = GalleryController(videoDelegate: self, imageDelegate: self, pagesDelegate: self)
@@ -60,7 +43,17 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     Config.Grid.FrameView.fillColor = .clear
     Config.Grid.FrameView.borderColor = .clear
     Config.RefreshControl.isActive = true
-    Config.PageIndicator.isEnable = false
+    
+    Config.PageIndicator.isEnable = true
+    Config.PageIndicator.backgroundColor = .white
+    Config.PageIndicator.textColor = .black
+    
+    Config.SelectedView.videoLimit = 0
+    Config.SelectedView.imageLimit = 0
+    Config.SelectedView.allLimit = Int.max
+    Config.SelectedView.isEnabled = false
+    
+    Config.CellSelectedStyle.isEnabled = false
     showGallery(gallery: gallery)
   }
   
@@ -69,51 +62,19 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
     gallery.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
     view.addSubview(gallery.view)
     didMove(toParent: gallery)
+    
+  
+    let items = Array(1...10).map { (i) -> ChosenItem in
+      return ChosenItem(duration: TimeInterval(i))
+    }
+    gallery.setupSelectedItems(items: items)
+    
     view.layoutIfNeeded()
   }
   // MARK: - LightboxControllerDismissalDelegate
   
   func lightboxControllerWillDismiss(_ controller: LightboxController) {
     
-  }
-  
-  // MARK: - GalleryControllerDelegate
-  
-  func galleryControllerDidCancel(_ controller: GalleryController) {
-    controller.dismiss(animated: true, completion: nil)
-    gallery = nil
-  }
-  
-  func galleryController(_ controller: GalleryController, didSelectVideo video: Video) {
-    controller.dismiss(animated: true, completion: nil)
-    gallery = nil
-    
-    
-    editor.edit(video: video) { (editedVideo: Video?, tempPath: URL?) in
-      DispatchQueue.main.async {
-        if let tempPath = tempPath {
-          let controller = AVPlayerViewController()
-          controller.player = AVPlayer(url: tempPath)
-          
-          self.present(controller, animated: true, completion: nil)
-        }
-      }
-    }
-  }
-  
-  func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
-    controller.dismiss(animated: true, completion: nil)
-    gallery = nil
-  }
-  
-  func galleryController(_ controller: GalleryController, requestLightbox images: [Image]) {
-    LightboxConfig.DeleteButton.enabled = true
-    
-    SVProgressHUD.show()
-    Image.resolve(images: images, completion: { [weak self] resolvedImages in
-      SVProgressHUD.dismiss()
-      self?.showLightbox(images: resolvedImages.compactMap({ $0 }))
-    })
   }
   
   // MARK: - Helper
@@ -134,6 +95,14 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate, Gal
 
 
 extension ViewController: VideosControllerDelegate {
+  func didAddVideo(video: Video) {
+       print("add video")
+  }
+  
+  func didRemoveVideo(video: Video) {
+     print("remov video")
+  }
+  
   
   func didSelectVideo(video: Video) {
     
@@ -179,3 +148,11 @@ extension ViewController: PagesControllerDelegate {
   }
 }
 
+
+
+extension ViewController: GalleryControllerDelegate {
+  func didEdit(_ controller: GalleryController, item: ChosenItem) {
+    
+  }
+  
+}

@@ -102,11 +102,11 @@ class PagesController: UIViewController {
 
             if #available(iOS 11, *) {
                 Constraint.on(
-                    pageIndicator.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+                    pageIndicator.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
                 )
             } else {
                 Constraint.on(
-                    pageIndicator.bottomAnchor.constraint(equalTo: pageIndicator.superview!.bottomAnchor)
+                    pageIndicator.topAnchor.constraint(equalTo: pageIndicator.superview!.topAnchor)
                 )
             }
         }
@@ -114,9 +114,9 @@ class PagesController: UIViewController {
         view.addSubview(scrollView)
         scrollView.addSubview(scrollViewContentView)
         
-        scrollView.g_pinUpward()
+        scrollView.g_pinDownward()
         if usePageIndicator {
-            scrollView.g_pin(on: .bottom, view: pageIndicator, on: .top)
+            scrollView.g_pin(on: .top, view: pageIndicator, on: .bottom)
         } else {
             scrollView.g_pinDownward()
         }

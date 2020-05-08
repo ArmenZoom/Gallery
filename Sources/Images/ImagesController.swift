@@ -135,25 +135,27 @@ extension ImagesController: PageAware {
 }
 
 extension ImagesController: CartDelegate {
+    func cart(_ cart: Cart, didAdd video: Video, newlyTaken: Bool) { }
+    func cart(_ cart: Cart, didRemove video: Video) { }
     
     func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool) {
         self.delegate?.didAddImage(image: image)
-        stackView.reload(cart.images, added: true)
+        //stackView.reload(cart.images, added: true)
         refreshView()
-        
+
         if newlyTaken {
             refreshSelectedAlbum()
         }
     }
-    
+
     func cart(_ cart: Cart, didRemove image: Image) {
         self.delegate?.didRemoveImage(image: image)
-        stackView.reload(cart.images)
+        //stackView.reload(cart.images)
         refreshView()
     }
-    
+
     func cartDidReload(_ cart: Cart) {
-        stackView.reload(cart.images)
+        //stackView.reload(cart.images)
         refreshView()
         refreshSelectedAlbum()
     }
@@ -210,13 +212,38 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[(indexPath as NSIndexPath).item]
         
-        if cart.images.contains(item) {
-            cart.remove(item)
+        
+        if Config.CellSelectedStyle.isEnabled {
+            if cart.images.contains(item) {
+                cart.remove(item)
+            } else {
+                if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && Config.SelectedView.allLimit > cart.allItemsCount {
+                    cart.add(item)
+                } else if !Config.SelectedView.isEnabled, Config.SelectedView.imageLimit == 1, let cartItem = cart.images.first {
+                    cart.remove(cartItem)
+                    cart.add(item)
+                }
+            }
         } else {
-            if Config.Camera.imageLimit == 0 || Config.Camera.imageLimit > cart.images.count{
+            if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && Config.SelectedView.allLimit > cart.allItemsCount {
                 cart.add(item)
             }
         }
+        
+        
+        
+//        if cart.images.contains(item) && Config.CellSelectedStyle.isEnabled {
+//            cart.remove(item)
+//        } else {
+//            if Config.Camera.imageLimit == 0 || Config.Camera.imageLimit > cart.images.count {
+//                cart.add(item)
+//            } else {
+//                if Config.Camera.imageLimit == 1, let cartItem = cart.images.first {
+//                    cart.remove(cartItem)
+//                    cart.add(item)
+//                }
+//            }
+//        }
         
         configureFrameViews()
     }
@@ -232,11 +259,14 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
     func configureFrameView(_ cell: ImageCell, indexPath: IndexPath) {
         let item = items[(indexPath as NSIndexPath).item]
         
-        if let index = cart.images.index(of: item) {
-            cell.frameView.g_quickFade()
-            cell.frameView.label.text = "\(index + 1)"
-        } else {
-            cell.frameView.alpha = 0
+        if Config.CellSelectedStyle.isEnabled {
+            if let index = cart.images.index(of: item) {
+                cell.frameView.g_quickFade()
+                cell.frameView.label.text = "\(index + 1)"
+            } else {
+                cell.frameView.alpha = 0
+            }
         }
+      
     }
 }
