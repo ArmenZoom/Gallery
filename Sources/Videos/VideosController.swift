@@ -20,9 +20,7 @@ public class VideosController: UIViewController {
     var library = VideosLibrary()
     let once = Once()
     let cart: Cart
-    
-    private var selectedVideo = [Video]()
-    
+        
     // MARK: - Init
     
     public required init(cart: Cart) {
@@ -44,23 +42,9 @@ public class VideosController: UIViewController {
     }
     
     public func unselectVideo(_ video: Video) {
-        var indexPaths = [IndexPath]()
-        self.selectedVideo.removeAll { (item) -> Bool in
-            let removed = item == video
-            if removed {
-                if let index = self.items.index(of: item) {
-                    indexPaths.append(IndexPath(row: index, section: 0))
-                }
-            }
-            return removed
+        if let index = self.items.index(of: video) {
+             self.gridView.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
         }
-        
-        self.gridView.collectionView.reloadItems(at: indexPaths)
-    }
-    
-    public func unselectAllVideo() {
-        self.selectedVideo.removeAll()
-        self.gridView.collectionView.reloadData()
     }
     
     // MARK: - Setup
@@ -153,6 +137,7 @@ extension VideosController: CartDelegate {
     }
     
     public func cart(_ cart: Cart, didRemove video: Video) {
+        self.unselectVideo(video)
         self.delegate?.didRemoveVideo(video: video)
     }
 
@@ -215,7 +200,7 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
         cell.configure(item)
         cell.frameView.label.isHidden = true
         if Config.VideoEditor.isBorder {
-            cell.choosen = selectedVideo.contains(item)
+            cell.choosen = cart.videos.contains(item)
         }
         
         configureFrameView(cell, indexPath: indexPath)

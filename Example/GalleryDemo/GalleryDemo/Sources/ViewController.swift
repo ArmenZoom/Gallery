@@ -33,9 +33,15 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
   }
   
   @objc func buttonTouched(_ button: UIButton) {
+    if let video = self.videos.last {
+      self.gallery?.removeItem(video: video)
+      self.videos.removeLast()
+      return
+    }
+    
     gallery = GalleryController(videoDelegate: self, imageDelegate: self, pagesDelegate: self)
     gallery.delegate = self
-    Config.tabsToShow = [.imageTab]
+    Config.tabsToShow = [.videoTab]
     Config.VideoEditor.isBorder = true
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
@@ -51,16 +57,17 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
     Config.SelectedView.videoLimit = 0
     Config.SelectedView.imageLimit = 0
     Config.SelectedView.allLimit = Int.max
-    Config.SelectedView.isEnabled = true
+    Config.SelectedView.isEnabled = false
     
-    Config.CellSelectedStyle.isEnabled = false
+    Config.CellSelectedStyle.isEnabled = true
+    
     showGallery(gallery: gallery)
   }
   
   func showGallery(gallery: GalleryController) {
     addChild(gallery)
     gallery.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-    view.addSubview(gallery.view)
+    view.insertSubview(gallery.view, at: 0)
     didMove(toParent: gallery)
     
   
@@ -69,6 +76,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
     }
     gallery.setupSelectedItems(items: items)
     
+    self.button.bringSubviewToFront(self.view)
     view.layoutIfNeeded()
   }
   // MARK: - LightboxControllerDismissalDelegate
@@ -96,6 +104,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
 
 extension ViewController: VideosControllerDelegate {
   func didAddVideo(video: Video) {
+    self.videos.append(video)
        print("add video")
   }
   
