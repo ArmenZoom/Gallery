@@ -210,14 +210,15 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = items[(indexPath as NSIndexPath).item]
+        
         
         
         if Config.CellSelectedStyle.isEnabled {
+            let item = items[(indexPath as NSIndexPath).item]
             if cart.images.contains(item) {
                 cart.remove(item)
             } else {
-                if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && Config.SelectedView.allLimit > cart.allItemsCount {
+                if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
                     cart.add(item)
                 } else if !Config.SelectedView.isEnabled, Config.SelectedView.imageLimit == 1, let cartItem = cart.images.first {
                     cart.remove(cartItem)
@@ -225,25 +226,11 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
                 }
             }
         } else {
-            if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && Config.SelectedView.allLimit > cart.allItemsCount {
+            let item = Image(asset: items[(indexPath as NSIndexPath).item].asset)
+            if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
                 cart.add(item)
             }
         }
-        
-        
-        
-//        if cart.images.contains(item) && Config.CellSelectedStyle.isEnabled {
-//            cart.remove(item)
-//        } else {
-//            if Config.Camera.imageLimit == 0 || Config.Camera.imageLimit > cart.images.count {
-//                cart.add(item)
-//            } else {
-//                if Config.Camera.imageLimit == 1, let cartItem = cart.images.first {
-//                    cart.remove(cartItem)
-//                    cart.add(item)
-//                }
-//            }
-//        }
         
         configureFrameViews()
     }

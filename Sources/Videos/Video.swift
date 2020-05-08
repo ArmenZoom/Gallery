@@ -216,19 +216,24 @@ protocol ChosenViewDelegate: class {
 public class ChosenView: UIView {
     weak var delegate: ChosenViewDelegate?
     
-    lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = 2
-        layout.minimumLineSpacing = 2
-        layout.scrollDirection = .horizontal
-        let c = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-        c.backgroundColor = .white
-        c.showsHorizontalScrollIndicator = false
-        return c
-    }()
+    lazy var collectionView: UICollectionView = self.makeCollectionView()
         
     
     var items: [ChosenItem] = []
+    var cart: Cart
+    
+    // MARK: - Initialization
+    public required init(cart: Cart) {
+        self.cart = cart
+        super.init(frame: .zero)
+        cart.delegates.add(self)
+        self.setup()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     
     var canAddNewItem: Bool {
         for item in self.items {
@@ -247,29 +252,17 @@ public class ChosenView: UIView {
         return true
     }
     
-    // MARK: - Initialization
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        setup()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
     func addVideo(video: Video) {
         if let index = self.getFirstEmtyIndex() {
             let item = self.items[index]
+            video.id = item.id
             item.image = nil
             item.video = video
-            item.id = video.id
+        
         }
         self.reload()
     }
-    
+
     func removeVideo(video: Video) {
        if let index = self.getIndexById(id: video.id) {
             self.items[index].invalidate()
@@ -280,9 +273,9 @@ public class ChosenView: UIView {
     func addImage(image: Image) {
         if let index = self.getFirstEmtyIndex() {
             let item = self.items[index]
+            image.id = item.id
             item.image = image
             item.video = nil
-            item.id = image.id
         }
         self.reload()
     }
@@ -303,6 +296,7 @@ public class ChosenView: UIView {
     public func addItem(item: ChosenItem) {
         if let index = self.getFirstEmtyIndex() {
             self.items[index] = item
+            self.cart.canAddNewItems = index == (self.items.count-1)
         }
     }
     
@@ -317,7 +311,7 @@ public class ChosenView: UIView {
     
     func getFirstEmtyIndex() -> Int? {
         for (i, item) in self.items.enumerated() {
-            if item.image == nil && item.video == nil {
+            if item.image == nil && item.video == nil && item.asset == nil {
                 return i
             }
         }
@@ -339,6 +333,28 @@ public class ChosenView: UIView {
     
     func reload() {
         self.collectionView.reloadData()
+    }
+    
+    func makeCollectionView() -> UICollectionView {
+         let layout = UICollectionViewFlowLayout()
+         layout.minimumInteritemSpacing = 2
+         layout.minimumLineSpacing = 2
+         layout.scrollDirection = .horizontal
+         let c = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+         c.backgroundColor = .white
+         c.showsHorizontalScrollIndicator = false
+         return c
+     }
+}
+
+extension ChosenView: CartDelegate {
+    public func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool){}
+    public func cart(_ cart: Cart, didRemove image: Image){}
+    public func cart(_ cart: Cart, didAdd video: Video, newlyTaken: Bool){}
+    public func cart(_ cart: Cart, didRemove video: Video){}
+    
+    public func cartDidReload(_ cart: Cart) {
+        self.reload()
     }
 }
 
@@ -396,13 +412,20 @@ extension ChosenView: UICollectionViewDelegateFlowLayout {
 
 extension ChosenView: ChosenCellDelegate {
     public func didRemove(_ view: ChosenCell, indexPath: IndexPath) {
-        let item = ChosenItem()
-        item.image = self.items[indexPath.row].image
-        item.video = self.items[indexPath.row].video
+        let item = self.items[indexPath.row]
         self.delegate?.didRemove(self, item: item)
+        if let image = item.image {
+            self.cart.remove(image)
+        } else if let video = item.video {
+            self.cart.remove(video)
+        }
+        item.invalidate()
+        self.cart.reload()
         
-        self.items[indexPath.row].invalidate()
-        self.reload()
+//        self.items[indexPath.row].invalidate()
+        
+//        self.cart?.canAddNewItems = true
+//        self.reload()
        
     }
     
@@ -437,6 +460,7 @@ public class ChosenItem {
     
     public init(asset: AVAsset? = nil, localIdentifier: String? = nil, startTime: TimeInterval = 0, duration: TimeInterval = 0, updated: Bool = false, editable: Bool = false) {
         self.id = String.randomString(length: 10)
+        print("items id \(id)")
         self.asset = asset
         self.duration = duration
         self.startTime = startTime
@@ -447,10 +471,9 @@ public class ChosenItem {
         if let identifier = localIdentifier {
             DispatchQueue.global().async {
 //                let option = true ? Utils.fetchVideoOptions() : Utils.fetchImageOptions()
-                if let asset = Fetcher.fetchAsset(identifier) {
-                    print("identifier === " , identifier)
-                    self.video = Video(asset: asset)
-                }
+                let obj = self.loadFromLocalIdentifier(id: identifier)
+                self.image = obj.image
+                self.video = obj.video
             }
         }
     }
@@ -461,7 +484,18 @@ public class ChosenItem {
         self.video = nil
         self.localIdentifier = nil
         self.startTime = 0
-        self.id = ""
+    }
+    
+    public func loadFromLocalIdentifier(id: String) -> (image: Image?, video: Video?) {
+        if let asset = Fetcher.fetchAsset(id) {
+            if asset.duration > 0 {
+                return (image: nil, video: Video(asset: asset))
+            } else {
+                 return (image: Image(asset: asset), video: nil)
+              
+            }
+        }
+        return (image: nil, video: nil)
     }
 
 }

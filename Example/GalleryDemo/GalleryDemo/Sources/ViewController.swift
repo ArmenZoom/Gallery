@@ -51,7 +51,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
     Config.SelectedView.videoLimit = 0
     Config.SelectedView.imageLimit = 0
     Config.SelectedView.allLimit = Int.max
-    Config.SelectedView.isEnabled = false
+    Config.SelectedView.isEnabled = true
     
     Config.CellSelectedStyle.isEnabled = false
     showGallery(gallery: gallery)

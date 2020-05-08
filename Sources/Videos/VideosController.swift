@@ -241,14 +241,13 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = items[(indexPath as NSIndexPath).item]
-        
-        
+
         if Config.CellSelectedStyle.isEnabled {
+            let item = items[(indexPath as NSIndexPath).item]
             if cart.videos.contains(item) {
                 cart.remove(item)
             } else {
-                if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videos.count) && Config.SelectedView.allLimit > cart.allItemsCount {
+                if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videos.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
                     cart.add(item)
                 } else if !Config.SelectedView.isEnabled, Config.SelectedView.videoLimit == 1, let cartItem = cart.videos.first {
                     cart.remove(cartItem)
@@ -256,23 +255,11 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
                 }
             }
         } else {
-            if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videos.count) && Config.SelectedView.allLimit > cart.allItemsCount {
+            let item = Video(asset: items[(indexPath as NSIndexPath).item].asset)
+            if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videos.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
                 cart.add(item)
             }
         }
-
-//        if cart.videos.contains(item) && Config.CellSelectedStyle.isEnabled {
-//            cart.remove(item)
-//        } else  {
-//            if Config.Camera.videoLimit == 0 || Config.Camera.videoLimit > cart.videos.count {
-//                cart.add(item)
-//            } else {
-//                if Config.Camera.videoLimit == 1, let cartItem = cart.videos.first {
-//                    cart.remove(cartItem)
-//                    cart.add(item)
-//                }
-//            }
-//        }
         
         configureFrameViews()
     }

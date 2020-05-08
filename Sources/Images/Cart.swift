@@ -17,6 +17,8 @@ public class Cart {
     public var images: [Image] = []
     public var videos: [Video] = []
     
+    public var canAddNewItems: Bool = true
+    
     public var allItemsCount: Int {
         return images.count + videos.count
     }
@@ -47,19 +49,21 @@ public class Cart {
     }
     
     public func remove(_ image: Image) {
-        guard let index = images.index(of: image) else { return }
-        
-        images.remove(at: index)
-        
-        for case let delegate as CartDelegate in delegates.allObjects {
-            delegate.cart(self, didRemove: image)
+        for (i, img) in self.images.enumerated() {
+            if image.id == img.id {
+                print("removed item id == \(image.id)")
+                images.remove(at: i)
+                for case let delegate as CartDelegate in delegates.allObjects {
+                    delegate.cart(self, didRemove: image)
+                }
+                return
+            }
         }
     }
     
     
     public func reload( images: [Image]) {
         self.images = images
-        
         for case let delegate as CartDelegate in delegates.allObjects {
             delegate.cartDidReload(self)
         }
@@ -70,19 +74,20 @@ public class Cart {
         if videos.contains(video) && Config.CellSelectedStyle.isEnabled { return }
         
         videos.append(video)
-        
         for case let delegate as CartDelegate in delegates.allObjects {
             delegate.cart(self, didAdd: video, newlyTaken: newlyTaken)
         }
     }
     
     public func remove(_ video: Video) {
-        guard let index = videos.index(of: video) else { return }
-        
-        videos.remove(at: index)
-        
-        for case let delegate as CartDelegate in delegates.allObjects {
-            delegate.cart(self, didRemove: video)
+        for (i, vid) in self.videos.enumerated() {
+            if video.id == vid.id {
+                videos.remove(at: i)
+                for case let delegate as CartDelegate in delegates.allObjects {
+                    delegate.cart(self, didRemove: video)
+                }
+                return
+            }
         }
     }
     

@@ -12,7 +12,8 @@ public protocol GalleryControllerDelegate: class {
     func didEdit(_ controller: GalleryController, item: ChosenItem)
 }
 
-public class GalleryController: UIViewController, PermissionControllerDelegate {
+public class GalleryController: UIViewController {
+    
     public weak var delegate: GalleryControllerDelegate?
     weak var videoDelegate: VideosControllerDelegate?
     weak var imageDelegate: ImageControllerDelegate?
@@ -30,11 +31,7 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         return v
     }()
     
-    lazy var chosenView: ChosenView = {
-        let view = ChosenView()
-        view.delegate = self
-        return view
-    }()
+    lazy var chosenView: ChosenView = self.makeChosenView()
     
     var cart = Cart()
     var imagesController: ImagesController?
@@ -63,9 +60,7 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setup()
-        
+    
         if let pagesController = makePagesController() {
             // Is multi select
             if Config.SelectedView.isEnabled {
@@ -105,22 +100,6 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
             pagesController.didChangeSlectedIndex(index)
         }
     }
-    
-    //    public func removeItem(_ video: Video) {
-    //        self.videoController?.unselectVideo(video)
-    //    }
-    //
-    //    public func removeAllItem() {
-    //        self.videoController?.unselectAllVideo()
-    //    }
-    //
-    //    public func reloadData() {
-    //        self.cart = Cart()
-    //        if let vc = videoController {
-    //            vc.reloadLibrary()
-    //            vc.pageDidShow()
-    //        }
-    //    }
     
     public override var prefersStatusBarHidden : Bool {
         return true
@@ -191,25 +170,11 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         return controller
     }
     
-    // MARK: - Setup
-    
-    func setup() {
+    func makeChosenView() -> ChosenView {
+        let view = ChosenView(cart: self.cart)
+        view.delegate = self
+        return view
     }
-    
-    // MARK: - PermissionControllerDelegate
-    
-    func permissionControllerDidFinish(_ controller: PermissionController) {
-        if let pagesController = makePagesController() {
-            if Config.SelectedView.isEnabled {
-                g_addChildController(pagesController, addFromView: self.pagesItemsContentView)
-            } else {
-                g_addChildController(pagesController, addFromView: self.view)
-            }
-            
-            controller.g_removeFromParentController(addFromView: self.view)
-        }
-    }
-    
     
     public func setupSelectedItems(items: [ChosenItem]) {
         self.chosenView.items = items
@@ -227,6 +192,20 @@ public class GalleryController: UIViewController, PermissionControllerDelegate {
         return  self.chosenView.items
     }
     
+}
+
+extension GalleryController: PermissionControllerDelegate {
+    func permissionControllerDidFinish(_ controller: PermissionController) {
+        if let pagesController = makePagesController() {
+            if Config.SelectedView.isEnabled {
+                g_addChildController(pagesController, addFromView: self.pagesItemsContentView)
+            } else {
+                g_addChildController(pagesController, addFromView: self.view)
+            }
+            
+            controller.g_removeFromParentController(addFromView: self.view)
+        }
+    }
 }
 
 extension GalleryController: PagesControllerDelegate {
@@ -268,12 +247,7 @@ extension GalleryController: VideosControllerDelegate {
 
 extension GalleryController: ChosenViewDelegate {
     func didRemove(_ view: ChosenView, item: ChosenItem) {
-        if let image = item.image {
-            self.cart.remove(image)
-        } else if let video = item.video {
-            self.cart.remove(video)
-        }
-        self.cart.reload()
+        print("remove id == \(item.id)")
     }
     
     func didEdit(_ view: ChosenView, item: ChosenItem) {
