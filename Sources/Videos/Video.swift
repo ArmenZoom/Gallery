@@ -258,7 +258,7 @@ public class ChosenView: UIView {
             video.id = item.id
             item.image = nil
             item.video = video
-            
+            self.cart.canAddNewItems = index < (self.items.count-1)
         }
         self.reload()
     }
@@ -266,6 +266,7 @@ public class ChosenView: UIView {
     func removeVideo(video: Video) {
         if let index = self.getIndexById(id: video.id) {
             self.items[index].invalidate()
+            self.cart.canAddNewItems = true
         }
         self.reload()
     }
@@ -276,13 +277,16 @@ public class ChosenView: UIView {
             image.id = item.id
             item.image = image
             item.video = nil
+            self.cart.canAddNewItems = index < (self.items.count-1)
         }
+        
         self.reload()
     }
     
     func removeImage(image: Image) {
         if let index = self.getIndexById(id: image.id) {
             self.items[index].invalidate()
+            self.cart.canAddNewItems = true
         }
         self.reload()
     }
@@ -296,7 +300,7 @@ public class ChosenView: UIView {
     public func addItem(item: ChosenItem) {
         if let index = self.getFirstEmtyIndex() {
             self.items[index] = item
-            self.cart.canAddNewItems = index == (self.items.count-1)
+            self.cart.canAddNewItems = index < (self.items.count-1)
         }
     }
     

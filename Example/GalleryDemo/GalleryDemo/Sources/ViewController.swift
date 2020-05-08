@@ -41,7 +41,7 @@ class ViewController: UIViewController {
     gallery = GalleryController(videoDelegate: self, imageDelegate: self, pagesDelegate: self)
     gallery.delegate = self
     Config.tabsToShow = [.videoTab, .imageTab]
-    Config.VideoEditor.isBorder = true
+    Config.VideoEditor.isBorder = false
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
     Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)

@@ -17,7 +17,13 @@ public class Cart {
     public var images: [Image] = []
     public var videos: [Video] = []
     
-    public var canAddNewItems: Bool = true
+    public var canAddNewItems: Bool = true {
+        didSet {
+            if !self.canAddNewItems {
+                print("aaaaaa")
+            }
+        }
+    }
     
     public var allItemsCount: Int {
         return images.count + videos.count
