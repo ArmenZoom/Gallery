@@ -37,7 +37,7 @@ class PagesController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .black
+        view.backgroundColor = .white
         setup()
     }
     
@@ -118,7 +118,7 @@ class PagesController: UIViewController {
         if usePageIndicator {
             scrollView.g_pin(on: .top, view: pageIndicator, on: .bottom)
         } else {
-            scrollView.g_pinDownward()
+            scrollView.g_pin(on: .top, view: self.view, on: .top)
         }
         
         scrollViewContentView.g_pinEdges()

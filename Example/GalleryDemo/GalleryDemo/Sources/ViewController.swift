@@ -35,7 +35,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
   @objc func buttonTouched(_ button: UIButton) {
     gallery = GalleryController(videoDelegate: self, imageDelegate: self, pagesDelegate: self)
     gallery.delegate = self
-    Config.tabsToShow = [.imageTab, .videoTab]
+    Config.tabsToShow = [.imageTab]
     Config.VideoEditor.isBorder = true
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
