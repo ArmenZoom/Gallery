@@ -10,6 +10,7 @@ import AVFoundation
 
 public protocol GalleryControllerDelegate: class {
     func didEdit(_ controller: GalleryController, item: ChosenItem)
+    func didRemove(_ controller: GalleryController, id: String)
 }
 
 public class GalleryController: UIViewController {
@@ -231,8 +232,8 @@ extension GalleryController: PagesControllerDelegate {
 
 extension GalleryController: ImageControllerDelegate {
     public func didAddImage(image: Image) {
-        self.imageDelegate?.didAddImage(image: image)
         self.chosenView.addImage(image: image)
+        self.imageDelegate?.didAddImage(image: image)
     }
     
     public func didRemoveImage(image: Image) {
@@ -243,8 +244,8 @@ extension GalleryController: ImageControllerDelegate {
 
 extension GalleryController: VideosControllerDelegate {
     public func didAddVideo(video: Video) {
-        self.videoDelegate?.didAddVideo(video: video)
         self.chosenView.addVideo(video: video)
+        self.videoDelegate?.didAddVideo(video: video)
     }
     
     public func didRemoveVideo(video: Video) {
@@ -262,7 +263,7 @@ extension GalleryController: VideosControllerDelegate {
 
 extension GalleryController: ChosenViewDelegate {
     func didRemove(_ view: ChosenView, item: ChosenItem) {
-        print("remove id == \(item.id)")
+        self.delegate?.didRemove(self, id: item.id)
     }
     
     func didEdit(_ view: ChosenView, item: ChosenItem) {

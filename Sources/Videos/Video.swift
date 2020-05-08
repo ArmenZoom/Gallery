@@ -318,6 +318,17 @@ public class ChosenView: UIView {
         return nil
     }
     
+    func getLastRemovedItem() -> Int? {
+        var index: Int?
+        for i in stride(from: 0, to: self.items.count, by: 1) {
+            let item = self.items[i]
+            if (item.image != nil || item.video != nil || item.asset != nil) && item.editable {
+                index = i
+            }
+        }
+        return index
+    }
+    
     // MARK: - Setup
     
     func setup() {
@@ -376,9 +387,11 @@ extension ChosenView: UICollectionViewDataSource {
         
         let item = self.items[indexPath.row]
         
+        cell.removedButtonHide = self.getLastRemovedItem() != indexPath.row
         cell.configure(item, indexPath: indexPath)
         cell.delegate = self
-        cell.selectedBorderIndex = self.getFirstEmtyIndex()
+        cell.selectedBorder = self.getFirstEmtyIndex() == indexPath.row
+        
         
         return cell
     }
@@ -531,11 +544,14 @@ public class ChosenCell: UICollectionViewCell {
         }
     }
     
-    public var selectedBorderIndex: Int? = 0 {
+    public var selectedBorder: Bool = false {
         didSet {
-            self.borderColor = self.selectedBorderIndex == self.indexPath.row ? UIColor(red: 228.0/256.0, green: 170.0/256.0, blue: 72.0/256.0, alpha: 1.0) : UIColor(red: 203.0/256.0, green: 203.0/256.0, blue: 203.0/256.0, alpha: 1.0)
+            self.borderColor = self.selectedBorder ? UIColor(red: 228.0/256.0, green: 170.0/256.0, blue: 72.0/256.0, alpha: 1.0) : UIColor(red: 203.0/256.0, green: 203.0/256.0, blue: 203.0/256.0, alpha: 1.0)
         }
     }
+    
+    public var removedButtonHide: Bool = false
+    
     // MARK: - Initialization
     
     override init(frame: CGRect) {
@@ -553,10 +569,10 @@ public class ChosenCell: UICollectionViewCell {
     func configure(_ item: ChosenItem, indexPath: IndexPath) {
         self.indexPath = indexPath
         imageView.layoutIfNeeded()
-        removeButton.isHidden = false
+        removeButton.isHidden = self.removedButtonHide
+        self.editButton.isHidden = true
         if let asset = item.video?.asset {
             imageView.g_loadImage(asset)
-            
         } else if let asset = item.image?.asset {
             imageView.g_loadImage(asset)
         } else if let avasset = item.asset {
@@ -566,12 +582,9 @@ public class ChosenCell: UICollectionViewCell {
             removeButton.isHidden = true
         }
         
-        if !item.editable {
-            self.editButton.isHidden = true
-            self.editButton.isHidden = true
+        if item.editable && imageView.image != nil {
+            self.editButton.isHidden = false
         }
-        
-        editButton.isHidden = removeButton.isHidden
         timeLabel.text = String(format: "%.f", item.duration) + "s"
         
     }

@@ -1,11 +1,10 @@
 import UIKit
 import Gallery
-import Lightbox
 import AVFoundation
 import AVKit
 import SVProgressHUD
 
-class ViewController: UIViewController, LightboxControllerDismissalDelegate {
+class ViewController: UIViewController {
   
   var button: UIButton!
   var gallery: GalleryController!
@@ -41,7 +40,7 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
     
     gallery = GalleryController(videoDelegate: self, imageDelegate: self, pagesDelegate: self)
     gallery.delegate = self
-    Config.tabsToShow = [.videoTab]
+    Config.tabsToShow = [.videoTab, .imageTab]
     Config.VideoEditor.isBorder = true
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
@@ -57,9 +56,9 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
     Config.SelectedView.videoLimit = 0
     Config.SelectedView.imageLimit = 0
     Config.SelectedView.allLimit = Int.max
-    Config.SelectedView.isEnabled = false
+    Config.SelectedView.isEnabled = true
     
-    Config.CellSelectedStyle.isEnabled = true
+    Config.CellSelectedStyle.isEnabled = false
     
     showGallery(gallery: gallery)
   }
@@ -71,33 +70,21 @@ class ViewController: UIViewController, LightboxControllerDismissalDelegate {
     didMove(toParent: gallery)
     
   
-    let items = Array(1...10).map { (i) -> ChosenItem in
-      return ChosenItem(duration: TimeInterval(i))
+    if let url = Bundle.main.url(forResource: "zoomerang_no_ads", withExtension: "mp4") {
+      
+      let items = Array(1...10).map { (i) -> ChosenItem in
+        let asset = i % 4 == 3 ? AVAsset(url: url) : nil
+        return ChosenItem(asset: asset, duration: TimeInterval(i))
+      }
+      gallery.setupSelectedItems(items: items)
+      
     }
-    gallery.setupSelectedItems(items: items)
+
     
     self.button.bringSubviewToFront(self.view)
     view.layoutIfNeeded()
   }
-  // MARK: - LightboxControllerDismissalDelegate
   
-  func lightboxControllerWillDismiss(_ controller: LightboxController) {
-    
-  }
-  
-  // MARK: - Helper
-  
-  func showLightbox(images: [UIImage]) {
-    guard images.count > 0 else {
-      return
-    }
-    
-    let lightboxImages = images.map({ LightboxImage(image: $0) })
-    let lightbox = LightboxController(images: lightboxImages, startIndex: 0)
-    lightbox.dismissalDelegate = self
-    
-    gallery.present(lightbox, animated: true, completion: nil)
-  }
 }
 
 
@@ -114,7 +101,8 @@ extension ViewController: VideosControllerDelegate {
   
   
   func didSelectVideo(video: Video) {
-    
+    video.fetchAVAsset { (asset) in
+    }
     video.fetchURL { (url) in
       
       if let outURL = url {
@@ -134,7 +122,6 @@ extension ViewController: ImageControllerDelegate {
   func didAddImage(image: Image) {
     image.resolve { (img) in
       if let im = img {
-        print("index === \(im.size)")
       }
     }
     
@@ -160,9 +147,12 @@ extension ViewController: PagesControllerDelegate {
 
 
 extension ViewController: GalleryControllerDelegate {
+  func didRemove(_ controller: GalleryController, id: String) {
+    
+  }
+  
   func didEdit(_ controller: GalleryController, item: ChosenItem) {
     let uploadModel: TutorialUploadVideoModel = TutorialUploadVideoModel(duration: item.duration, startTime: item.startTime, localIdentifier: item.localIdentifier, asset: item.asset, updated: item.updated)
-    uploadModel.
   }
   
 }
@@ -171,7 +161,7 @@ extension ViewController: GalleryControllerDelegate {
 struct TutorialUploadVideoModel {
   var duration: Double
   var startTime: Double
-  var localIdentifier: String
-  var asset: AVAsset
+  var localIdentifier: String?
+  var asset: AVAsset?
   var updated: Bool
 }
