@@ -95,6 +95,21 @@ public class GalleryController: UIViewController {
         chosenView.layer.shadowRadius = 5
     }
     
+    
+    public func reloadData() {
+        self.videoController?.reloadLibrary()
+        self.imagesController?.refreshSelectedAlbum()
+    }
+    
+    public func resetAllItems() {
+        self.cart.reload(images: [])
+        self.cart.reload(videos: [])
+    }
+    
+    public func removeItem(video: Video) {
+        self.cart.remove(video)
+    }
+    
     public func changePagesIndex(_ index: Int) {
         if let pagesController = self.pagesController {
             pagesController.didChangeSlectedIndex(index)
