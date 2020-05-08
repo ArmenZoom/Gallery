@@ -456,9 +456,9 @@ public class ChosenItem {
     var localIdentifier: String?
     var asset: AVAsset?
     var updated: Bool = false
-    var editable: Bool = false
+    var editable: Bool = true
     
-    public init(asset: AVAsset? = nil, localIdentifier: String? = nil, startTime: TimeInterval = 0, duration: TimeInterval = 0, updated: Bool = false, editable: Bool = false) {
+    public init(asset: AVAsset? = nil, localIdentifier: String? = nil, startTime: TimeInterval = 0, duration: TimeInterval = 0, updated: Bool = false, editable: Bool = true) {
         self.id = String.randomString(length: 10)
         print("items id \(id)")
         self.asset = asset
@@ -555,16 +555,24 @@ public class ChosenCell: UICollectionViewCell {
     func configure(_ item: ChosenItem, indexPath: IndexPath) {
         self.indexPath = indexPath
         imageView.layoutIfNeeded()
+        removeButton.isHidden = false
         if let asset = item.video?.asset {
             imageView.g_loadImage(asset)
-            removeButton.isHidden = false
+            
         } else if let asset = item.image?.asset {
             imageView.g_loadImage(asset)
-            removeButton.isHidden = false
+        } else if let avasset = item.asset {
+            imageView.g_loadImage(avasset)
         } else {
             imageView.image = nil
             removeButton.isHidden = true
         }
+        
+        if !item.editable {
+            self.editButton.isHidden = true
+            self.editButton.isHidden = true
+        }
+       
         editButton.isHidden = removeButton.isHidden
         timeLabel.text = String(format: "%.f", item.duration) + "s"
         
