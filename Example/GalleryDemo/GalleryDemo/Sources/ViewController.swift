@@ -161,7 +161,17 @@ extension ViewController: PagesControllerDelegate {
 
 extension ViewController: GalleryControllerDelegate {
   func didEdit(_ controller: GalleryController, item: ChosenItem) {
-    
+    let uploadModel: TutorialUploadVideoModel = TutorialUploadVideoModel(duration: item.duration, startTime: item.startTime, localIdentifier: item.localIdentifier, asset: item.asset, updated: item.updated)
+    uploadModel.
   }
   
+}
+
+
+struct TutorialUploadVideoModel {
+  var duration: Double
+  var startTime: Double
+  var localIdentifier: String
+  var asset: AVAsset
+  var updated: Bool
 }

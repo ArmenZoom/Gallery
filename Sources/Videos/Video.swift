@@ -217,7 +217,7 @@ public class ChosenView: UIView {
     weak var delegate: ChosenViewDelegate?
     
     lazy var collectionView: UICollectionView = self.makeCollectionView()
-        
+    
     
     var items: [ChosenItem] = []
     var cart: Cart
@@ -233,7 +233,7 @@ public class ChosenView: UIView {
     public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     
     var canAddNewItem: Bool {
         for item in self.items {
@@ -258,13 +258,13 @@ public class ChosenView: UIView {
             video.id = item.id
             item.image = nil
             item.video = video
-        
+            
         }
         self.reload()
     }
-
+    
     func removeVideo(video: Video) {
-       if let index = self.getIndexById(id: video.id) {
+        if let index = self.getIndexById(id: video.id) {
             self.items[index].invalidate()
         }
         self.reload()
@@ -336,15 +336,15 @@ public class ChosenView: UIView {
     }
     
     func makeCollectionView() -> UICollectionView {
-         let layout = UICollectionViewFlowLayout()
-         layout.minimumInteritemSpacing = 2
-         layout.minimumLineSpacing = 2
-         layout.scrollDirection = .horizontal
-         let c = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-         c.backgroundColor = .white
-         c.showsHorizontalScrollIndicator = false
-         return c
-     }
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 2
+        layout.minimumLineSpacing = 2
+        layout.scrollDirection = .horizontal
+        let c = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        c.backgroundColor = .white
+        c.showsHorizontalScrollIndicator = false
+        return c
+    }
 }
 
 extension ChosenView: CartDelegate {
@@ -422,11 +422,11 @@ extension ChosenView: ChosenCellDelegate {
         item.invalidate()
         self.cart.reload()
         
-//        self.items[indexPath.row].invalidate()
+        //        self.items[indexPath.row].invalidate()
         
-//        self.cart?.canAddNewItems = true
-//        self.reload()
-       
+        //        self.cart?.canAddNewItems = true
+        //        self.reload()
+        
     }
     
     public func didEdit(_ view: ChosenCell, indexPath: IndexPath) {
@@ -447,16 +447,16 @@ import AVFoundation
 import Photos
 
 public class ChosenItem {
-    var id: String
+    public var id: String
     var video: Video?
     var image: Image?
     
-    var duration: TimeInterval = 0
-    var startTime: TimeInterval = 0
-    var localIdentifier: String?
-    var asset: AVAsset?
-    var updated: Bool = false
-    var editable: Bool = true
+    public var duration: TimeInterval = 0
+    public var startTime: TimeInterval = 0
+    public var localIdentifier: String?
+    public var asset: AVAsset?
+    public var updated: Bool = false
+    public var editable: Bool = true
     
     public init(asset: AVAsset? = nil, localIdentifier: String? = nil, startTime: TimeInterval = 0, duration: TimeInterval = 0, updated: Bool = false, editable: Bool = true) {
         self.id = String.randomString(length: 10)
@@ -469,12 +469,10 @@ public class ChosenItem {
         self.localIdentifier = localIdentifier
         
         if let identifier = localIdentifier {
-            DispatchQueue.global().async {
-//                let option = true ? Utils.fetchVideoOptions() : Utils.fetchImageOptions()
-                let obj = self.loadFromLocalIdentifier(id: identifier)
-                self.image = obj.image
-                self.video = obj.video
-            }
+            //                let option = true ? Utils.fetchVideoOptions() : Utils.fetchImageOptions()
+            let obj = self.loadFromLocalIdentifier(id: identifier)
+            self.image = obj.image
+            self.video = obj.video
         }
     }
     
@@ -491,13 +489,13 @@ public class ChosenItem {
             if asset.duration > 0 {
                 return (image: nil, video: Video(asset: asset))
             } else {
-                 return (image: Image(asset: asset), video: nil)
-              
+                return (image: Image(asset: asset), video: nil)
+                
             }
         }
         return (image: nil, video: nil)
     }
-
+    
 }
 
 
@@ -518,7 +516,7 @@ public protocol ChosenCellDelegate: class {
 
 public class ChosenCell: UICollectionViewCell {
     weak var delegate: ChosenCellDelegate?
-
+    
     lazy var imageView: UIImageView = self.makeImageView()
     lazy var timeLabel: UILabel = self.makeTimeLabel()
     lazy var removeButton: UIButton = self.makeRemoveButton()
@@ -533,7 +531,7 @@ public class ChosenCell: UICollectionViewCell {
         }
     }
     
-   public var selectedBorderIndex: Int? = 0 {
+    public var selectedBorderIndex: Int? = 0 {
         didSet {
             self.borderColor = self.selectedBorderIndex == self.indexPath.row ? UIColor(red: 228.0/256.0, green: 170.0/256.0, blue: 72.0/256.0, alpha: 1.0) : UIColor(red: 203.0/256.0, green: 203.0/256.0, blue: 203.0/256.0, alpha: 1.0)
         }
@@ -572,7 +570,7 @@ public class ChosenCell: UICollectionViewCell {
             self.editButton.isHidden = true
             self.editButton.isHidden = true
         }
-       
+        
         editButton.isHidden = removeButton.isHidden
         timeLabel.text = String(format: "%.f", item.duration) + "s"
         
@@ -600,7 +598,7 @@ public class ChosenCell: UICollectionViewCell {
             timeLabel.centerXAnchor.constraint(equalTo: imageView.superview!.centerXAnchor)
         )
         timeLabel.g_pin(on: .top, view: imageView, on: .bottom)
-  
+        
         self.editButton.g_pinEdges(view: imageView)
         self.layer.cornerRadius = 8
         self.layer.masksToBounds = true
