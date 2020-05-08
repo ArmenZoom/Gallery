@@ -242,6 +242,7 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
+        self.delegate?.didSelectVideo(video: items[(indexPath as NSIndexPath).item])
         if Config.CellSelectedStyle.isEnabled {
             let item = items[(indexPath as NSIndexPath).item]
             if cart.videos.contains(item) {
