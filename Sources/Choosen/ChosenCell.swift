@@ -129,7 +129,7 @@ public class ChosenCell: UICollectionViewCell {
     
     private func makeEditButton() -> UIButton {
         let b = UIButton(type: UIButton.ButtonType.custom)
-        b.setImage(GalleryBundle.image("gallery_close"), for: .normal)
+        b.setImage(GalleryBundle.image("gallery_edit_icon"), for: .normal)
         b.addTarget(self, action: #selector(editAction), for: .touchUpInside)
         b.backgroundColor = .clear
         return b
