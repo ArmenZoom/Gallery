@@ -61,7 +61,10 @@ public class GalleryController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.loadControllers()
+    }
     
+    func loadControllers() {
         if let pagesController = makePagesController() {
             // Is multi select
             if Config.SelectedView.isEnabled {
@@ -212,15 +215,7 @@ public class GalleryController: UIViewController {
 
 extension GalleryController: PermissionControllerDelegate {
     func permissionControllerDidFinish(_ controller: PermissionController) {
-        if let pagesController = makePagesController() {
-            if Config.SelectedView.isEnabled {
-                g_addChildController(pagesController, addFromView: self.pagesItemsContentView)
-            } else {
-                g_addChildController(pagesController, addFromView: self.view)
-            }
-            
-            controller.g_removeFromParentController(addFromView: self.view)
-        }
+        self.loadControllers()
     }
 }
 

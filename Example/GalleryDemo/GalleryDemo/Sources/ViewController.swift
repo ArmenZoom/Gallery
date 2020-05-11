@@ -41,23 +41,19 @@ class ViewController: UIViewController {
     gallery = GalleryController(videoDelegate: self, imageDelegate: self, pagesDelegate: self)
     gallery.delegate = self
     Config.tabsToShow = [.videoTab, .imageTab]
-    Config.VideoEditor.isBorder = false
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
     Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
     Config.Grid.FrameView.fillColor = .clear
     Config.Grid.FrameView.borderColor = .clear
     Config.RefreshControl.isActive = true
-    
     Config.PageIndicator.isEnable = true
     Config.PageIndicator.backgroundColor = .white
     Config.PageIndicator.textColor = .black
-    
     Config.SelectedView.videoLimit = 0
     Config.SelectedView.imageLimit = 0
     Config.SelectedView.allLimit = Int.max
     Config.SelectedView.isEnabled = true
-    
     Config.CellSelectedStyle.isEnabled = false
     
     showGallery(gallery: gallery)
@@ -66,7 +62,7 @@ class ViewController: UIViewController {
   func showGallery(gallery: GalleryController) {
     addChild(gallery)
     gallery.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-    view.insertSubview(gallery.view, at: 0)
+    view.addSubview(gallery.view) //(gallery.view, at: 0)
     didMove(toParent: gallery)
     
   
@@ -74,14 +70,12 @@ class ViewController: UIViewController {
       
       let items = Array(1...10).map { (i) -> ChosenItem in
         let asset = i % 4 == 3 ? AVAsset(url: url) : nil
-        return ChosenItem(asset: asset, duration: TimeInterval(i))
+        return ChosenItem(id: "id\(i)", asset: asset, duration: TimeInterval(i))
       }
       gallery.setupSelectedItems(items: items)
       
     }
-
-    
-    self.button.bringSubviewToFront(self.view)
+//    self.button.bringSubviewToFront(self.view)
     view.layoutIfNeeded()
   }
   
@@ -120,6 +114,7 @@ extension ViewController: VideosControllerDelegate {
 
 extension ViewController: ImageControllerDelegate {
   func didAddImage(image: Image) {
+    print("id  ===+=== \(image.id)")
     image.resolve { (img) in
       if let im = img {
       }
