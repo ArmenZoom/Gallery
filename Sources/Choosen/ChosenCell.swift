@@ -24,6 +24,9 @@ public class ChosenCell: UICollectionViewCell {
     let buttonWidth: CGFloat = 14
     var indexPath: IndexPath!
     
+    private let borderSelectedColor = UIColor(red: 228.0/256.0, green: 170.0/256.0, blue: 72.0/256.0, alpha: 1.0)
+    private let borderUnselectedColor = UIColor(red: 203.0/256.0, green: 203.0/256.0, blue: 203.0/256.0, alpha: 1.0)
+    
     private var borderColor: UIColor = UIColor(red: 203.0/256.0, green: 203.0/256.0, blue: 203.0/256.0, alpha: 1.0) {
         didSet {
             self.imageView.layer.borderColor = self.borderColor.cgColor
@@ -32,7 +35,7 @@ public class ChosenCell: UICollectionViewCell {
     
     public var selectedBorder: Bool = false {
         didSet {
-            self.borderColor = self.selectedBorder ? UIColor(red: 228.0/256.0, green: 170.0/256.0, blue: 72.0/256.0, alpha: 1.0) : UIColor(red: 203.0/256.0, green: 203.0/256.0, blue: 203.0/256.0, alpha: 1.0)
+            self.borderColor = self.selectedBorder ? self.borderSelectedColor : self.borderUnselectedColor
         }
     }
     

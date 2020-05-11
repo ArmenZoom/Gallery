@@ -21,6 +21,17 @@ public class ChosenView: UIView {
     
     var items: [ChosenItem] = [] {
         didSet {
+            self.cart.resetItems()
+            self.items.forEach { (item) in
+                if let imd = item.image {
+                    self.cart.images.append(imd)
+                } else if let vid = item.video {
+                    self.cart.videos.append(vid)
+                } else if let videoRecord = item.asset {
+                    self.cart.videoRecord.append(videoRecord)
+                }
+            }
+            
             self.collectionView.reloadData()
         }
     }
@@ -235,12 +246,12 @@ extension ChosenView: UICollectionViewDelegateFlowLayout {
 extension ChosenView: ChosenCellDelegate {
     public func didRemove(_ view: ChosenCell, indexPath: IndexPath) {
         let item = self.items[indexPath.row]
-        self.delegate?.didRemove(self, index: indexPath.row)
         if let image = item.image {
             self.cart.remove(image)
         } else if let video = item.video {
             self.cart.remove(video)
         }
+        self.delegate?.didRemove(self, index: indexPath.row)
         item.invalidate()
         self.cart.reload()
     }

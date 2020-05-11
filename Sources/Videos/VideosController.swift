@@ -233,7 +233,7 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
             if cart.videos.contains(item) {
                 cart.remove(item)
             } else {
-                if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videos.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
+                if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videosCount) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
                     cart.add(item)
                 } else if !Config.SelectedView.isEnabled, Config.SelectedView.videoLimit == 1, let cartItem = cart.videos.first {
                     cart.remove(cartItem)
@@ -242,7 +242,7 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
             }
         } else {
             let item = Video(asset: items[(indexPath as NSIndexPath).item].asset)
-            if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videos.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
+            if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videosCount) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
                 cart.add(item)
             }
         }

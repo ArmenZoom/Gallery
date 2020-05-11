@@ -16,6 +16,7 @@ public class Cart {
     
     public var images: [Image] = []
     public var videos: [Video] = []
+    public var videoRecord: [AVAsset] = []
     
     public var canAddNewItems: Bool = true {
         didSet {
@@ -25,9 +26,18 @@ public class Cart {
         }
     }
     
-    public var allItemsCount: Int {
-        return images.count + videos.count
+    public var videosCount: Int {
+        return videos.count + self.videoRecord.count
     }
+    
+    public var imagesCount: Int {
+        self.images.count
+    }
+    
+    public var allItemsCount: Int {
+        return self.videosCount + self.imagesCount
+    }
+    
     var delegates: NSHashTable<AnyObject> = NSHashTable.weakObjects()
     
     // MARK: - Initialization
@@ -115,8 +125,13 @@ public class Cart {
     // MARK: - Reset
     
     public func reset() {
+        self.resetItems()
+        delegates.removeAllObjects()
+    }
+    
+    public func resetItems() {
         videos = []
         images = []
-        delegates.removeAllObjects()
+        videoRecord = []
     }
 }

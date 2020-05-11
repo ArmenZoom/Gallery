@@ -25,7 +25,6 @@ public class ChosenItem {
                 startTime: TimeInterval = 0, duration: TimeInterval = 0,
                 updated: Bool = false, editable: Bool = true) {
         self.id = id
-        print("items id \(id)")
         self.asset = asset
         self.duration = duration
         self.startTime = startTime
@@ -34,10 +33,11 @@ public class ChosenItem {
         self.localIdentifier = localIdentifier
         
         if let identifier = localIdentifier {
-            //                let option = true ? Utils.fetchVideoOptions() : Utils.fetchImageOptions()
             let obj = self.loadFromLocalIdentifier(id: identifier)
             self.image = obj.image
             self.video = obj.video
+            self.image?.id = self.id
+            self.video?.id = self.id
         }
     }
     
