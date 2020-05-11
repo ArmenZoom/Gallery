@@ -20,8 +20,11 @@ public class ChosenItem {
     public var updated: Bool = false
     public var editable: Bool = true
     
-    public init(asset: AVAsset? = nil, localIdentifier: String? = nil, startTime: TimeInterval = 0, duration: TimeInterval = 0, updated: Bool = false, editable: Bool = true) {
-        self.id = String.randomString(length: 10)
+    public init(id: String, localIdentifier: String? = nil,
+                asset: AVAsset? = nil,
+                startTime: TimeInterval = 0, duration: TimeInterval = 0,
+                updated: Bool = false, editable: Bool = true) {
+        self.id = id
         print("items id \(id)")
         self.asset = asset
         self.duration = duration

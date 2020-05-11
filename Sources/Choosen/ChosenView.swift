@@ -19,7 +19,12 @@ public class ChosenView: UIView {
     lazy var collectionView: UICollectionView = self.makeCollectionView()
     
     
-    var items: [ChosenItem] = []
+    var items: [ChosenItem] = [] {
+        didSet {
+            self.collectionView.reloadData()
+        }
+    }
+    
     var cart: Cart
     
     // MARK: - Initialization
@@ -126,7 +131,7 @@ public class ChosenView: UIView {
         var index: Int?
         for i in stride(from: 0, to: self.items.count, by: 1) {
             let item = self.items[i]
-            if (item.image != nil || item.video != nil || item.asset != nil) && item.editable {
+            if (item.image != nil || item.video != nil || item.asset != nil) {
                 index = i
             }
         }

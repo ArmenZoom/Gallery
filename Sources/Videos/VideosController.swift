@@ -199,7 +199,7 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
         
         cell.configure(item)
         cell.frameView.label.isHidden = true
-        if Config.VideoEditor.isBorder {
+        if Config.CellSelectedStyle.isEnabled {
             cell.choosen = cart.videos.contains(item)
         }
         
