@@ -9,8 +9,8 @@ import AVFoundation
 //}
 
 public protocol GalleryControllerDelegate: class {
-    func didEdit(_ controller: GalleryController, item: ChosenItem)
-    func didRemove(_ controller: GalleryController, id: String)
+    func didEdit(_ controller: GalleryController, index: Int)
+    func didRemove(_ controller: GalleryController, index: Int)
 }
 
 public class GalleryController: UIViewController {
@@ -257,11 +257,11 @@ extension GalleryController: VideosControllerDelegate {
 
 
 extension GalleryController: ChosenViewDelegate {
-    func didRemove(_ view: ChosenView, item: ChosenItem) {
-        self.delegate?.didRemove(self, id: item.id)
+    func didEdit(_ view: ChosenView, index: Int) {
+        self.delegate?.didEdit(self, index: index)
     }
     
-    func didEdit(_ view: ChosenView, item: ChosenItem) {
-        self.delegate?.didEdit(self, item: item)
+    func didRemove(_ view: ChosenView, index: Int) {
+        self.delegate?.didRemove(self, index: index)
     }
 }

@@ -9,8 +9,8 @@ import UIKit
 import Photos
 
 protocol ChosenViewDelegate: class {
-    func didEdit(_ view: ChosenView, item: ChosenItem)
-    func didRemove(_ view: ChosenView, item: ChosenItem)
+    func didEdit(_ view: ChosenView, index: Int)
+    func didRemove(_ view: ChosenView, index: Int)
 }
 
 public class ChosenView: UIView {
@@ -235,7 +235,7 @@ extension ChosenView: UICollectionViewDelegateFlowLayout {
 extension ChosenView: ChosenCellDelegate {
     public func didRemove(_ view: ChosenCell, indexPath: IndexPath) {
         let item = self.items[indexPath.row]
-        self.delegate?.didRemove(self, item: item)
+        self.delegate?.didRemove(self, index: indexPath.row)
         if let image = item.image {
             self.cart.remove(image)
         } else if let video = item.video {
@@ -243,15 +243,9 @@ extension ChosenView: ChosenCellDelegate {
         }
         item.invalidate()
         self.cart.reload()
-        
-        //        self.items[indexPath.row].invalidate()
-        
-        //        self.cart?.canAddNewItems = true
-        //        self.reload()
-        
     }
     
     public func didEdit(_ view: ChosenCell, indexPath: IndexPath) {
-        self.delegate?.didEdit(self, item: self.items[indexPath.row])
+        self.delegate?.didEdit(self, index: indexPath.row)
     }
 }
