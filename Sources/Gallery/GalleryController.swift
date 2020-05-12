@@ -248,10 +248,6 @@ extension GalleryController: VideosControllerDelegate {
         self.chosenView.removeVideo(video: video)
     }
     
-    public func didSelectVideo(video: Video) {
-        self.videoDelegate?.didSelectVideo(video: video)
-    }
-    
 }
 
 

@@ -3,7 +3,6 @@ import Photos
 import AVKit
 
 public protocol VideosControllerDelegate: class {
-    func didSelectVideo(video: Video)
     func didAddVideo(video: Video)
     func didRemoveVideo(video: Video)
 }
@@ -227,7 +226,6 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        self.delegate?.didSelectVideo(video: items[(indexPath as NSIndexPath).item])
         if Config.CellSelectedStyle.isEnabled {
             let item = items[(indexPath as NSIndexPath).item]
             if cart.videos.contains(item) {
