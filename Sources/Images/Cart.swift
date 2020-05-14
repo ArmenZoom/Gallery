@@ -63,7 +63,6 @@ public class Cart {
     public func remove(_ image: Image) {
         for (i, img) in self.images.enumerated() {
             if image.id == img.id {
-                print("removed item id == \(image.id)")
                 images.remove(at: i)
                 for case let delegate as CartDelegate in delegates.allObjects {
                     delegate.cart(self, didRemove: image)

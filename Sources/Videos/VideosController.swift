@@ -198,11 +198,6 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
         let item = items[(indexPath as NSIndexPath).item]
         
         cell.configure(item)
-         
-        print("indexPath == \(indexPath)")
-        if !(item.duration >= self.cart.addedVideoMinDuration) {
-            print("indexPath == \(indexPath), dur == \(self.cart.addedVideoMinDuration)")
-        }
         cell.contentView.alpha = item.duration >= self.cart.addedVideoMinDuration ? 1.0 : 0.2
         cell.frameView.label.isHidden = true
         if Config.CellSelectedStyle.isEnabled {

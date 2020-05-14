@@ -69,7 +69,7 @@ class ViewController: UIViewController {
     if let url = Bundle.main.url(forResource: "zoomerang_no_ads", withExtension: "mp4") {
       
       let items = Array(1...10).map { (i) -> ChosenItem in
-        let asset = i % 4 == 3 ? AVAsset(url: url) : nil
+        let asset = i <= 7 ? AVAsset(url: url) : nil
         return ChosenItem(id: "id\(i)", asset: asset, duration: TimeInterval(i))
       }
       gallery.setupSelectedItems(items: items)

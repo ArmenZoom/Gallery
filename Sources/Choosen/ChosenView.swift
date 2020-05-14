@@ -31,8 +31,7 @@ public class ChosenView: UIView {
                     self.cart.videoRecord.append(videoRecord)
                 }
             }
-            
-            self.collectionView.reloadData()
+            self.reload()
         }
     }
     
