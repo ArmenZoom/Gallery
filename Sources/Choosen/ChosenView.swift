@@ -64,7 +64,7 @@ public class ChosenView: UIView {
     }
     
     var canShowedCellTime: Bool {
-        return true
+        return Config.SelectedView.Collection.isEnableTimeView
     }
     
     func addVideo(video: Video) {
@@ -227,13 +227,9 @@ extension ChosenView: UICollectionViewDelegateFlowLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
+        let height: CGFloat = collectionView.bounds.size.height * 0.8
         let width = collectionView.bounds.size.height * 0.6
-        var height: CGFloat
-        if self.canShowedCellTime {
-            height = collectionView.bounds.size.height * 0.8
-        } else {
-            height = width
-        }
+
         return CGSize(width: width, height: height)
     }
     
@@ -242,7 +238,7 @@ extension ChosenView: UICollectionViewDelegateFlowLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return Config.Grid.Dimension.lineSpacing
+        return 0
     }
     
 }

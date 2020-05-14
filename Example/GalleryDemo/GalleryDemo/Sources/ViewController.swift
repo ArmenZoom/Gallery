@@ -74,6 +74,7 @@ class ViewController: UIViewController {
     Config.Limit.allItemsCount = Int.max
     Config.SelectedView.isEnabled = true
     Config.CellSelectedStyle.isEnabled = false
+    Config.SelectedView.Collection.isEnableTimeView = false
   }
   
   func config2() {

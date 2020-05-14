@@ -42,9 +42,7 @@ public struct Config {
         public static var isEnabled: Bool = false
         
         public struct Collection {
-            public static var editeImage: UIImage? = GalleryBundle.image("gallery_edit_icon")
-            public static var removeImage: UIImage? = GalleryBundle.image("gallery_close")
-            
+            public static var isEnableTimeView: Bool = true
             public static var textColor: UIColor = UIColor(red: 54/255, green: 56/255, blue: 62/255, alpha: 1)
             public static var textFont: UIFont = UIFont.systemFont(ofSize: 1)
         }

@@ -95,13 +95,14 @@ public class ChosenCell: UICollectionViewCell {
             imageView.centerXAnchor.constraint(equalTo: imageView.superview!.centerXAnchor),
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
             
-            timeLabel.bottomAnchor.constraint(equalTo: imageView.superview!.bottomAnchor),
-            timeLabel.rightAnchor.constraint(equalTo: imageView.superview!.rightAnchor, constant: -self.buttonWidth / 2.0),
+            timeLabel.rightAnchor.constraint(lessThanOrEqualTo: imageView.superview!.rightAnchor),
             timeLabel.centerXAnchor.constraint(equalTo: imageView.superview!.centerXAnchor)
         )
-        timeLabel.g_pin(on: .top, view: imageView, on: .bottom)
+        timeLabel.g_pin(on: .top, view: imageView, on: .bottom, constant: 2)
+        timeLabel.isHidden = !Config.SelectedView.Collection.isEnableTimeView
         
         self.editButton.g_pinEdges(view: imageView)
+        self.backgroundColor = .white
         self.layer.cornerRadius = 8
         self.layer.masksToBounds = true
     }
@@ -143,7 +144,7 @@ public class ChosenCell: UICollectionViewCell {
         l.font = Config.Font.Text.bold.withSize(12)
         l.textAlignment = .center
         l.textColor = .black
-        l.backgroundColor = .white
+        l.backgroundColor = .clear
         return l
     }
     
