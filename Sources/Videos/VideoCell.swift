@@ -6,6 +6,13 @@ class VideoCell: ImageCell {
     lazy var cameraImageView: UIImageView = self.makeCameraImageView()
     lazy var durationLabel: UILabel = self.makeDurationLabel()
     lazy var bottomOverlay: UIView = self.makeBottomOverlay()
+    lazy var gradientLayer: CAGradientLayer = self.makeGradientLayer()
+    lazy var forgraundView: UIView = {
+        let v = UIView(frame: .zero)
+        v.isUserInteractionEnabled = false
+        v.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        return v
+    }()
    
     lazy var selectedOverlayView: UIView = {
         let view = UIView()
@@ -20,11 +27,24 @@ class VideoCell: ImageCell {
     
     var choosen: Bool = false {
         didSet {
-            if self.choosen {
-                self.addSubview(self.selectedOverlayView)
-                self.updateView()
-            } else {
-                self.selectedOverlayView.removeFromSuperview()
+            if self.choosen != oldValue {
+                if self.choosen {
+                    self.addSubview(self.selectedOverlayView)
+                    self.updateView()
+                } else {
+                    self.selectedOverlayView.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    var canSelect: Bool = true {
+        didSet {
+            if self.canSelect != oldValue {
+                self.forgraundView.isHidden = self.canSelect
+                [bottomOverlay, durationLabel].forEach {
+                    $0.isHidden = !self.canSelect
+                }
             }
         }
     }
@@ -33,7 +53,8 @@ class VideoCell: ImageCell {
 
     func configure(_ video: Video) {
         super.configure(video.asset)
-        self.bottomOverlay.isHidden = !video.isVideo
+        self.forgraundView.isHidden = self.canSelect
+        self.bottomOverlay.isHidden = !(video.isVideo && self.canSelect)
         
         let text = video.duration == 0.0 ? nil : "\(Utils.format(video.duration))"
         self.durationLabel.text = text
@@ -44,23 +65,21 @@ class VideoCell: ImageCell {
     override func setup() {
         super.setup()
         [bottomOverlay, durationLabel].forEach {
-            self.insertSubview($0, belowSubview: self.highlightOverlay)
+            self.contentView.insertSubview($0, belowSubview: self.highlightOverlay)
         }
-
+        
+        bottomOverlay.layer.insertSublayer(self.gradientLayer, at: 0)
+        self.contentView.addSubview(forgraundView)
+        
+        forgraundView.g_pinEdges()
+        
         bottomOverlay.g_pinDownward()
         bottomOverlay.g_pin(height: 16)
-
-//    cameraImageView.g_pin(on: .left, constant: 4)
-//    cameraImageView.g_pin(on: .centerY, view: durationLabel, on: .centerY)
-//    cameraImageView.g_pin(size: CGSize(width: 12, height: 6))
-
-//        durationLabel.g_pin(on: .right, constant: -4)
+        
         durationLabel.g_pinCenter(view: bottomOverlay)
-//        durationLabel.g_pin(on: .bottom, constant: -2)
     
         self.layer.cornerRadius = 8
         self.layer.masksToBounds = true
-    
     }
 
     // MARK: - Controls
@@ -84,13 +103,20 @@ class VideoCell: ImageCell {
 
     func makeBottomOverlay() -> UIView {
         let view = UIView()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-
+        view.backgroundColor = UIColor.clear
         return view
+    }
+    
+    func makeGradientLayer() -> CAGradientLayer {
+        let gradient = CAGradientLayer()
+        let colors = [UIColor.black.withAlphaComponent(0), UIColor.black.withAlphaComponent(0.5)]
+        gradient.colors = colors.map { $0.cgColor }
+        return gradient
     }
     
     func updateView() {
         self.selectedOverlayView.frame = self.bounds
+        self.gradientLayer.frame = bottomOverlay.bounds
     }
     
     override func layoutSubviews() {

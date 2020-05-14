@@ -136,7 +136,7 @@ class CameraController: UIViewController {
     }
     
     fileprivate func isBelowImageLimit() -> Bool {
-        return (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count)
+        return (Config.Limit.imageCount == 0 || Config.Limit.imageCount > cart.images.count)
     }
     
     // MARK: - View

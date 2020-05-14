@@ -11,7 +11,7 @@ public class VideosController: UIViewController {
     
     weak var delegate: VideosControllerDelegate? = nil
     lazy var gridView: GridView = self.makeGridView()
-    lazy var videoBox: VideoBox = self.makeVideoBox()
+//    lazy var videoBox: VideoBox = self.makeVideoBox()
     lazy var infoLabel: UILabel = self.makeInfoLabel()
     
     
@@ -110,18 +110,18 @@ public class VideosController: UIViewController {
         return view
     }
     
-    func makeVideoBox() -> VideoBox {
-        let videoBox = VideoBox()
-        videoBox.delegate = self
-        
-        return videoBox
-    }
+//    func makeVideoBox() -> VideoBox {
+//        let videoBox = VideoBox()
+//        videoBox.delegate = self
+//        
+//        return videoBox
+//    }
     
     func makeInfoLabel() -> UILabel {
         let label = UILabel()
         label.textColor = UIColor.white
         label.font = Config.Font.Text.regular.withSize(12)
-        label.text = String(format: "Gallery.Videos.MaxiumDuration".g_localize(fallback: "FIRST %d SECONDS"), (Int(Config.VideoEditor.maximumDuration)))
+        label.text = String(format: "Gallery.Videos.MaxiumDuration".g_localize(fallback: "FIRST %d SECONDS"), (Int(Config.Limit.videoMaxDuration)))
         
         return label
     }
@@ -197,13 +197,10 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: VideoCell.self), for: indexPath) as! VideoCell
         let item = items[(indexPath as NSIndexPath).item]
         
+        cell.canSelect = item.duration >= self.cart.addedVideoMinDuration
         cell.configure(item)
-        cell.contentView.alpha = item.duration >= self.cart.addedVideoMinDuration ? 1.0 : 0.2
-        cell.frameView.label.isHidden = true
-        if Config.CellSelectedStyle.isEnabled {
-            cell.choosen = cart.videos.contains(item)
-        }
         
+//        cell.frameView.label.isHidden = true
         configureFrameView(cell, indexPath: indexPath)
         
         return cell
@@ -259,16 +256,9 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
     }
     
     func configureFrameView(_ cell: VideoCell, indexPath: IndexPath) {
-        let item = items[(indexPath as NSIndexPath).item]
-        
         if Config.CellSelectedStyle.isEnabled {
-            if let index = cart.videos.index(of: item) {
-                cell.choosen = true
-                cell.frameView.g_quickFade()
-            } else {
-                cell.choosen = false
-                cell.frameView.alpha = 0
-            }
+             let item = items[(indexPath as NSIndexPath).item]
+             cell.choosen = cart.videos.index(of: item) != nil
         }
     }
 }

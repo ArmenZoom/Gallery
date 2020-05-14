@@ -32,17 +32,32 @@ public struct Config {
     
     public struct PageIndicator {
         public static var backgroundColor: UIColor = UIColor(red: 0, green: 3/255, blue: 10/255, alpha: 1)
+        public static var unselectedFont: UIFont = UIFont.systemFont(ofSize: 14)
+        public static var selectedFont: UIFont = UIFont.boldSystemFont(ofSize: 14)
         public static var textColor: UIColor = UIColor.white
         public static var isEnable: Bool = true
-        
     }
     
     public struct SelectedView {
         public static var isEnabled: Bool = false
         
-        public static var imageLimit: Int = 0
-        public static var videoLimit: Int = 0
-        public static var allLimit: Int = Int.max
+        public struct Collection {
+            public static var editeImage: UIImage? = GalleryBundle.image("gallery_edit_icon")
+            public static var removeImage: UIImage? = GalleryBundle.image("gallery_close")
+            
+            public static var textColor: UIColor = UIColor(red: 54/255, green: 56/255, blue: 62/255, alpha: 1)
+            public static var textFont: UIFont = UIFont.systemFont(ofSize: 1)
+        }
+      
+    }
+    
+    public struct Limit {
+        public static var imageCount: Int = 0
+        public static var videoCount: Int = 0
+        public static var allItemsCount: Int = Int.max
+        
+        public static var videoMaxDuration: TimeInterval = 180
+        public static var videoMinDuration: TimeInterval = 3
     }
     
     public struct Camera {
@@ -122,8 +137,6 @@ public struct Config {
         
         public static var quality: String = AVAssetExportPresetHighestQuality
         public static var savesEditedVideoToLibrary: Bool = false
-        public static var maximumDuration: TimeInterval = 180
-        public static var minimumDuration: TimeInterval = 3
         public static var portraitSize: CGSize = CGSize(width: 360, height: 640)
         public static var landscapeSize: CGSize = CGSize(width: 640, height: 360)
 //        public static var isBorder: Bool = false

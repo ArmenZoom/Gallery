@@ -132,23 +132,23 @@ public class Cart {
     
     
     public var canAddVideoFromCart: Bool {
-        let checkVideoLimit = Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > self.videosCount
-        let checkAllItemLimit = Config.SelectedView.allLimit > self.allItemsCount
+        let checkVideoLimit = Config.Limit.videoCount == 0 || Config.Limit.videoCount > self.videosCount
+        let checkAllItemLimit = Config.Limit.allItemsCount > self.allItemsCount
         return checkVideoLimit && self.canAddNewItems && checkAllItemLimit
     }
     
     public var canAddSingleVideoState: Bool {
-        return !Config.SelectedView.isEnabled && Config.SelectedView.videoLimit == 1
+        return Config.CellSelectedStyle.isEnabled && Config.Limit.videoCount == 1
     }
     
 
     public var canAddImageFromCart: Bool {
-          let checkImageLimit = Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > self.imagesCount
-          let checkAllItemLimit = Config.SelectedView.allLimit > self.allItemsCount
+          let checkImageLimit = Config.Limit.imageCount == 0 || Config.Limit.imageCount > self.imagesCount
+          let checkAllItemLimit = Config.Limit.allItemsCount > self.allItemsCount
           return checkImageLimit && self.canAddNewItems && checkAllItemLimit
       }
       
       public var canAddSingleImageState: Bool {
-          return !Config.SelectedView.isEnabled && Config.SelectedView.imageLimit == 1
+          return Config.CellSelectedStyle.isEnabled && Config.Limit.imageCount == 1
       }
 }

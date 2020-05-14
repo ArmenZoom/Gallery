@@ -77,8 +77,8 @@ struct EditInfo {
   static func timeRange(_ avAsset: AVAsset) -> CMTimeRange {
     var end = avAsset.duration
 
-    if Config.VideoEditor.maximumDuration < avAsset.duration.seconds {
-      end = CMTime(seconds: Config.VideoEditor.maximumDuration, preferredTimescale: 1000)
+    if Config.Limit.videoMaxDuration < avAsset.duration.seconds {
+      end = CMTime(seconds: Config.Limit.videoMaxDuration, preferredTimescale: 1000)
     }
 
     return CMTimeRange(start: CMTime.zero, duration: end)
