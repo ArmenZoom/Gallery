@@ -163,7 +163,12 @@ public class ChosenView: UIView {
     // MARK: - Reload
     
     func reload() {
-        self.collectionView.reloadData()
+        if let index = self.getFirstEmtyIndex() {
+            self.cart.addedVideoMinDuration = self.items[index].duration
+        } else {
+            self.cart.addedVideoMinDuration = 0
+        }
+        self.cart.reload()
     }
     
     func makeCollectionView() -> UICollectionView {
@@ -185,7 +190,7 @@ extension ChosenView: CartDelegate {
     public func cart(_ cart: Cart, didRemove video: Video){}
     
     public func cartDidReload(_ cart: Cart) {
-        self.reload()
+        self.collectionView.reloadData()
     }
 }
 
@@ -253,7 +258,7 @@ extension ChosenView: ChosenCellDelegate {
         }
         self.delegate?.didRemove(self, index: indexPath.row)
         item.invalidate()
-        self.cart.reload()
+        self.reload()
     }
     
     public func didEdit(_ view: ChosenCell, indexPath: IndexPath) {

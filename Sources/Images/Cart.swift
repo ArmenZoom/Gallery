@@ -18,13 +18,9 @@ public class Cart {
     public var videos: [Video] = []
     public var videoRecord: [AVAsset] = []
     
-    public var canAddNewItems: Bool = true {
-        didSet {
-            if !self.canAddNewItems {
-                print("aaaaaa")
-            }
-        }
-    }
+    public var addedVideoMinDuration: Double = 0
+    
+    public var canAddNewItems: Bool = true
     
     public var videosCount: Int {
         return videos.count + self.videoRecord.count
@@ -87,7 +83,7 @@ public class Cart {
     
     
     public func add(_ video: Video, newlyTaken: Bool = false) {
-        if videos.contains(video) && Config.CellSelectedStyle.isEnabled { return }
+        if (videos.contains(video) && Config.CellSelectedStyle.isEnabled) || video.duration < addedVideoMinDuration { return }
         
         videos.append(video)
         for case let delegate as CartDelegate in delegates.allObjects {
@@ -134,4 +130,26 @@ public class Cart {
         images = []
         videoRecord = []
     }
+    
+    
+    public var canAddVideoFromCart: Bool {
+        let checkVideoLimit = Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > self.videosCount
+        let checkAllItemLimit = Config.SelectedView.allLimit > self.allItemsCount
+        return checkVideoLimit && self.canAddNewItems && checkAllItemLimit
+    }
+    
+    public var canAddSingleVideoState: Bool {
+        return !Config.SelectedView.isEnabled && Config.SelectedView.videoLimit == 1
+    }
+    
+
+    public var canAddImageFromCart: Bool {
+          let checkImageLimit = Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > self.imagesCount
+          let checkAllItemLimit = Config.SelectedView.allLimit > self.allItemsCount
+          return checkImageLimit && self.canAddNewItems && checkAllItemLimit
+      }
+      
+      public var canAddSingleImageState: Bool {
+          return !Config.SelectedView.isEnabled && Config.SelectedView.imageLimit == 1
+      }
 }

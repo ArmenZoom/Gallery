@@ -142,13 +142,15 @@ extension ViewController: PagesControllerDelegate {
 
 
 extension ViewController: GalleryControllerDelegate {
-  func didRemove(_ controller: GalleryController, id: String) {
+  func didEdit(_ controller: GalleryController, index: Int) {
     
   }
   
-  func didEdit(_ controller: GalleryController, item: ChosenItem) {
-    let uploadModel: TutorialUploadVideoModel = TutorialUploadVideoModel(duration: item.duration, startTime: item.startTime, localIdentifier: item.localIdentifier, asset: item.asset, updated: item.updated)
+  func didRemove(_ controller: GalleryController, index: Int) {
+    
   }
+  
+
   
 }
 

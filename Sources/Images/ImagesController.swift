@@ -218,16 +218,16 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
             if cart.images.contains(item) {
                 cart.remove(item)
             } else {
-                if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
+                if self.cart.canAddImageFromCart {
                     cart.add(item)
-                } else if !Config.SelectedView.isEnabled, Config.SelectedView.imageLimit == 1, let cartItem = cart.images.first {
+                } else if self.cart.canAddSingleImageState, let cartItem = cart.images.first {
                     cart.remove(cartItem)
                     cart.add(item)
                 }
             }
         } else {
             let item = Image(asset: items[(indexPath as NSIndexPath).item].asset)
-            if (Config.SelectedView.imageLimit == 0 || Config.SelectedView.imageLimit > cart.images.count) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
+            if self.cart.canAddImageFromCart {
                 cart.add(item)
             }
         }

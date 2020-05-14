@@ -141,7 +141,8 @@ extension VideosController: CartDelegate {
     }
 
     public func cartDidReload(_ cart: Cart) {
-        self.gridView.collectionView.reloadData()
+        self.gridView.collectionView.reloadItems(at: self.gridView.collectionView.indexPathsForVisibleItems)
+
     }
 }
 
@@ -197,6 +198,12 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
         let item = items[(indexPath as NSIndexPath).item]
         
         cell.configure(item)
+         
+        print("indexPath == \(indexPath)")
+        if !(item.duration >= self.cart.addedVideoMinDuration) {
+            print("indexPath == \(indexPath), dur == \(self.cart.addedVideoMinDuration)")
+        }
+        cell.contentView.alpha = item.duration >= self.cart.addedVideoMinDuration ? 1.0 : 0.2
         cell.frameView.label.isHidden = true
         if Config.CellSelectedStyle.isEnabled {
             cell.choosen = cart.videos.contains(item)
@@ -231,16 +238,16 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
             if cart.videos.contains(item) {
                 cart.remove(item)
             } else {
-                if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videosCount) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
+                if self.cart.canAddVideoFromCart {
                     cart.add(item)
-                } else if !Config.SelectedView.isEnabled, Config.SelectedView.videoLimit == 1, let cartItem = cart.videos.first {
+                } else if self.cart.canAddSingleVideoState, let cartItem = cart.videos.first {
                     cart.remove(cartItem)
                     cart.add(item)
                 }
             }
         } else {
             let item = Video(asset: items[(indexPath as NSIndexPath).item].asset)
-            if (Config.SelectedView.videoLimit == 0 || Config.SelectedView.videoLimit > cart.videosCount) && self.cart.canAddNewItems && Config.SelectedView.allLimit > cart.allItemsCount {
+            if self.cart.canAddVideoFromCart {
                 cart.add(item)
             }
         }
