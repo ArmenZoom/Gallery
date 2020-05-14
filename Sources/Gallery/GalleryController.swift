@@ -20,17 +20,9 @@ public class GalleryController: UIViewController {
     weak var imageDelegate: ImageControllerDelegate?
     weak var pagesDelegate: PagesControllerDelegate?
     
-    lazy var stackContentView: UIView = {
-        let v = UIView(frame: CGRect.zero)
-        v.backgroundColor = .red
-        return v
-    }()
-    
-    lazy var pagesItemsContentView: UIView =  {
-        let v = UIView(frame: CGRect.zero)
-        v.backgroundColor = .yellow
-        return v
-    }()
+    lazy var stackContentView: UIView = UIView(frame: CGRect.zero)
+    lazy var shadowView: UIView = self.makeShadowView()
+    lazy var pagesItemsContentView: UIView = UIView(frame: CGRect.zero)
     
     lazy var chosenView: ChosenView = self.makeChosenView()
     
@@ -71,9 +63,15 @@ public class GalleryController: UIViewController {
                 self.view.addSubview(stackContentView)
                 self.view.addSubview(pagesItemsContentView)
                 self.stackContentView.addSubview(chosenView)
+                self.stackContentView.addSubview(shadowView)
+                
+                shadowView.g_pin(height: 2)
+                shadowView.g_pin(on: .left, view: stackContentView)
+                shadowView.g_pin(on: .right, view: stackContentView)
+                shadowView.g_pin(on: .top, view: stackContentView, constant: 6)
                 
                 stackContentView.g_pinDownward()
-                stackContentView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+                stackContentView.g_pin(height: 100)
                 
                 pagesItemsContentView.g_pinUpward()
                 pagesItemsContentView.g_pin(on: .bottom, view: stackContentView, on: .top)
@@ -192,6 +190,16 @@ public class GalleryController: UIViewController {
     func makeChosenView() -> ChosenView {
         let view = ChosenView(cart: self.cart)
         view.delegate = self
+        return view
+    }
+    
+    func makeShadowView() -> UIView {
+        let view = UIView(frame: .zero)
+        view.backgroundColor = .white
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.3
+        view.layer.shadowOffset = CGSize(width: 0, height: -2)
+        view.layer.shadowRadius = 2
         return view
     }
     
