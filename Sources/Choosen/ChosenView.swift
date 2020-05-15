@@ -28,7 +28,7 @@ public class ChosenView: UIView {
                 } else if let vid = item.video {
                     self.cart.videos.append(vid)
                 } else if let videoRecord = item.asset {
-                    self.cart.videoRecord.append(videoRecord)
+                    self.cart.removeRecordVideo(videoRecord)
                 }
             }
             self.cart.canAddNewItems = self.getFirstEmtyIndex() != nil
@@ -251,6 +251,8 @@ extension ChosenView: ChosenCellDelegate {
             self.cart.remove(image)
         } else if let video = item.video {
             self.cart.remove(video)
+        } else if let video = item.asset {
+            self.cart.removeRecordVideo(video)
         }
         self.delegate?.didRemove(self, index: indexPath.row)
         item.invalidate()
