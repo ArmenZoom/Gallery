@@ -23,7 +23,7 @@ public class Cart {
     public var canAddNewItems: Bool = true
     
     public var videosCount: Int {
-        return videos.count + self.recordVideos.count
+        return videos.count + self.videosRecord.count
     }
     
     public var imagesCount: Int {
@@ -73,9 +73,9 @@ public class Cart {
     }
     
     public func removeRecordVideo(_ video: AVAsset) {
-        for (i, vid) in self.recordVideos.enumerated() {
+        for (i, vid) in self.videosRecord.enumerated() {
             if video == vid {
-                self.recordVideos.remove(at: i)
+                self.videosRecord.remove(at: i)
                 return
             }
         }
@@ -136,7 +136,7 @@ public class Cart {
     public func resetItems() {
         videos = []
         images = []
-        recordVideos = []
+        videosRecord = []
     }
     
     
