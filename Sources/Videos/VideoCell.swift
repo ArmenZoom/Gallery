@@ -11,7 +11,7 @@ class VideoCell: ImageCell {
     lazy var forgraundView: UIView = {
         let v = UIView(frame: .zero)
         v.isUserInteractionEnabled = false
-        v.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        v.backgroundColor = UIColor.white.withAlphaComponent(0.85)
         return v
     }()
    
@@ -78,8 +78,7 @@ class VideoCell: ImageCell {
         bottomOverlay.g_pin(height: 16)
         
         durationLabel.g_pinCenter(view: bottomOverlay)
-        self.layer.cornerRadius = 8
-        self.layer.masksToBounds = true
+      
         self.layoutIfNeeded()
         self.gradientLayer.frame = bottomOverlay.bounds
         

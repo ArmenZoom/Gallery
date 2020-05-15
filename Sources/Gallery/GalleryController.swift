@@ -89,14 +89,6 @@ public class GalleryController: UIViewController {
         }
     }
     
-    override public func loadView() {
-        super.loadView()
-        chosenView.layer.shadowColor = UIColor.black.cgColor
-        chosenView.layer.shadowOpacity = 0.5
-        chosenView.layer.shadowOffset = CGSize(width: 0, height: -2)
-        chosenView.layer.shadowRadius = 5
-    }
-    
     
     public func reloadData() {
         self.videoController?.reloadLibrary()
@@ -197,9 +189,9 @@ public class GalleryController: UIViewController {
         let view = UIView(frame: .zero)
         view.backgroundColor = .white
         view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.3
-        view.layer.shadowOffset = CGSize(width: 0, height: -2)
-        view.layer.shadowRadius = 2
+        view.layer.shadowOpacity = 0.07
+        view.layer.shadowOffset = CGSize(width: 0, height: -1)
+        view.layer.shadowRadius = 0.5
         return view
     }
     

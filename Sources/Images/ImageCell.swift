@@ -49,8 +49,20 @@ class ImageCell: UICollectionViewCell {
         frameView.g_pinEdges()
         highlightOverlay.g_pinEdges()
         
-        self.layer.cornerRadius = 8
-        self.layer.masksToBounds = true
+        self.contentView.layer.cornerRadius = 8
+        self.contentView.layer.masksToBounds = true
+        self.addShadow()
+    }
+    
+    func addShadow() {
+        self.clipsToBounds = false
+        self.layer.masksToBounds = false
+        self.layoutIfNeeded()
+        
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.16
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.layer.shadowRadius = 2
     }
     
     // MARK: - Controls
