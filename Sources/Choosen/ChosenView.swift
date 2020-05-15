@@ -31,6 +31,7 @@ public class ChosenView: UIView {
                     self.cart.videoRecord.append(videoRecord)
                 }
             }
+            self.cart.canAddNewItems = self.getFirstEmtyIndex() != nil
             self.reload()
         }
     }
