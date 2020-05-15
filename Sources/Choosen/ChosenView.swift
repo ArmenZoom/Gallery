@@ -254,6 +254,7 @@ extension ChosenView: ChosenCellDelegate {
         }
         self.delegate?.didRemove(self, index: indexPath.row)
         item.invalidate()
+        self.cart.canAddNewItems = true
         self.reload()
     }
     
