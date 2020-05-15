@@ -16,14 +16,14 @@ public class Cart {
     
     public var images: [Image] = []
     public var videos: [Video] = []
-    public var videosRecord: [AVAsset] = []
+    public var recordVideos: [AVAsset] = []
     
     public var addedVideoMinDuration: Double = 0
     
     public var canAddNewItems: Bool = true
     
     public var videosCount: Int {
-        return videos.count + self.videosRecord.count
+        return videos.count + self.recordVideos.count
     }
     
     public var imagesCount: Int {
@@ -73,9 +73,9 @@ public class Cart {
     }
     
     public func removeRecordVideo(_ video: AVAsset) {
-        for (i, vid) in self.videosRecord.enumerated() {
+        for (i, vid) in self.recordVideos.enumerated() {
             if video == vid {
-                self.videosRecord.remove(at: i)
+                self.recordVideos.remove(at: i)
                 return
             }
         }
@@ -136,7 +136,7 @@ public class Cart {
     public func resetItems() {
         videos = []
         images = []
-        videosRecord = []
+        recordVideos = []
     }
     
     

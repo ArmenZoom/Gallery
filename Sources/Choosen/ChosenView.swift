@@ -27,8 +27,8 @@ public class ChosenView: UIView {
                     self.cart.images.append(imd)
                 } else if let vid = item.video {
                     self.cart.videos.append(vid)
-                } else if let videoRecord = item.asset {
-                    self.cart.removeRecordVideo(videoRecord)
+                } else if let asset = item.asset {
+                    self.cart.recordVideos.append(asset)
                 }
             }
             self.cart.canAddNewItems = self.getFirstEmtyIndex() != nil
