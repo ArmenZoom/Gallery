@@ -60,9 +60,16 @@ class ImageCell: UICollectionViewCell {
         self.layoutIfNeeded()
         
         self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowOpacity = 0.16
+        self.layer.shadowOpacity = 0.2
         self.layer.shadowOffset = CGSize(width: 0, height: 0)
-        self.layer.shadowRadius = 2
+        self.layer.shadowRadius = 4
+    }
+    
+    func removeShadow() {
+        self.layer.shadowColor = UIColor.clear.cgColor
+        self.layer.shadowOpacity = 0.0
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.layer.shadowRadius = 0
     }
     
     // MARK: - Controls

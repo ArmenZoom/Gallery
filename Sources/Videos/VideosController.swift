@@ -200,6 +200,7 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
         cell.canSelect = item.duration >= self.cart.addedVideoMinDuration
         cell.configure(item)
         
+        
 //        cell.frameView.label.isHidden = true
         configureFrameView(cell, indexPath: indexPath)
         

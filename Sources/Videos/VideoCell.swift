@@ -11,7 +11,7 @@ class VideoCell: ImageCell {
     lazy var forgraundView: UIView = {
         let v = UIView(frame: .zero)
         v.isUserInteractionEnabled = false
-        v.backgroundColor = UIColor.white.withAlphaComponent(0.85)
+        v.backgroundColor = UIColor.white.withAlphaComponent(0.90)
         return v
     }()
    
@@ -43,9 +43,14 @@ class VideoCell: ImageCell {
         didSet {
             if self.canSelect != oldValue {
                 self.forgraundView.isHidden = self.canSelect
-                [bottomOverlay, durationLabel].forEach {
-                    $0.isHidden = !self.canSelect
+                if self.canSelect {
+                    self.addShadow()
+                } else {
+                    self.removeShadow()
                 }
+//                [bottomOverlay, durationLabel].forEach {
+//                    $0.isHidden = !self.canSelect
+//                }
             }
         }
     }
