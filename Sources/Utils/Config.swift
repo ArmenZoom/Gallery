@@ -148,5 +148,10 @@ public struct Config {
     
     public struct CellSelectedStyle {
         public static var isEnabled = true
+        
+    }
+    
+    public struct ImageCell {
+        public static var selectedStyleVideo: Bool = false
     }
 }

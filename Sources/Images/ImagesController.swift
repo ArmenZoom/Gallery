@@ -114,6 +114,12 @@ class ImagesController: UIViewController {
         
         return view
     }
+    
+    public func unselectItem(_ image: Image) {
+        if let index = self.items.index(of: image) {
+            self.gridView.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+        }
+    }
 }
 
 extension ImagesController: PageAware {
@@ -140,7 +146,6 @@ extension ImagesController: CartDelegate {
     
     func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool) {
         self.delegate?.didAddImage(image: image)
-        //stackView.reload(cart.images, added: true)
         refreshView()
 
         if newlyTaken {
@@ -149,13 +154,12 @@ extension ImagesController: CartDelegate {
     }
 
     func cart(_ cart: Cart, didRemove image: Image) {
+        self.unselectItem(image)
         self.delegate?.didRemoveImage(image: image)
-        //stackView.reload(cart.images)
         refreshView()
     }
 
     func cartDidReload(_ cart: Cart) {
-        //stackView.reload(cart.images)
         refreshView()
         refreshSelectedAlbum()
     }
@@ -210,9 +214,6 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        
-        
         if Config.CellSelectedStyle.isEnabled {
             let item = items[(indexPath as NSIndexPath).item]
             if cart.images.contains(item) {
@@ -250,7 +251,9 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
             if let index = cart.images.index(of: item) {
                 cell.frameView.g_quickFade()
                 cell.frameView.label.text = "\(index + 1)"
+                cell.choosen = true
             } else {
+                cell.choosen = false
                 cell.frameView.alpha = 0
             }
         }

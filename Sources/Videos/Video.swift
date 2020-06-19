@@ -6,7 +6,7 @@ public class Video: Equatable {
     
     public let asset: PHAsset
     
-    public var id: String = String.randomString(length: 10)
+    public var id: String
     
     public var localIdentifier: String {
         return asset.localIdentifier
@@ -25,6 +25,7 @@ public class Video: Equatable {
     init(asset: PHAsset, isVideo: Bool = true) {
         self.asset = asset
         self.isVideo = isVideo
+        self.id = asset.localIdentifier
     }
     
     /// Fetch video duration asynchronously

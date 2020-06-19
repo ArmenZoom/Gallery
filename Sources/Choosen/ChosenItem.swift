@@ -55,7 +55,6 @@ public class ChosenItem {
                 return (image: nil, video: Video(asset: asset))
             } else {
                 return (image: Image(asset: asset), video: nil)
-                
             }
         }
         return (image: nil, video: nil)

@@ -24,7 +24,7 @@ public class GalleryController: UIViewController {
     lazy var shadowView: UIView = self.makeShadowView()
     lazy var pagesItemsContentView: UIView = UIView(frame: CGRect.zero)
     
-    lazy var chosenView: ChosenView = self.makeChosenView()
+    lazy var chosenView: ChosenView? = self.makeChosenView()
     
     var cart = Cart()
     var imagesController: ImagesController?
@@ -62,7 +62,9 @@ public class GalleryController: UIViewController {
             if Config.SelectedView.isEnabled {
                 self.view.addSubview(stackContentView)
                 self.view.addSubview(pagesItemsContentView)
-                self.stackContentView.addSubview(chosenView)
+                if let chosenView = self.chosenView {
+                    self.stackContentView.addSubview(chosenView)
+                }
                 self.stackContentView.addSubview(shadowView)
                 
                 shadowView.g_pin(height: 2)
@@ -76,7 +78,7 @@ public class GalleryController: UIViewController {
                 pagesItemsContentView.g_pinUpward()
                 pagesItemsContentView.g_pin(on: .bottom, view: stackContentView, on: .top)
                 
-                chosenView.g_pinEdges()
+                chosenView?.g_pinEdges()
                 
                 g_addChildController(pagesController, addFromView: self.pagesItemsContentView)
             } else {
@@ -102,6 +104,10 @@ public class GalleryController: UIViewController {
     
     public func removeItem(video: Video) {
         self.cart.remove(video)
+    }
+    
+    public func removeItem(image: Image) {
+        self.cart.remove(image)
     }
     
     public func changePagesIndex(_ index: Int) {
@@ -179,7 +185,10 @@ public class GalleryController: UIViewController {
         return controller
     }
     
-    func makeChosenView() -> ChosenView {
+    func makeChosenView() -> ChosenView? {
+        if !Config.SelectedView.isEnabled {
+            return nil
+        }
         let view = ChosenView(cart: self.cart)
         view.delegate = self
         return view
@@ -196,19 +205,19 @@ public class GalleryController: UIViewController {
     }
     
     public func setupSelectedItems(items: [ChosenItem]) {
-        self.chosenView.items = items
+        self.chosenView?.items = items
     }
     
     public func updateSelectedItem(item: ChosenItem) {
-        self.chosenView.updateItem(item: item)
+        self.chosenView?.updateItem(item: item)
     }
     
     public func addNewItem(item: ChosenItem) {
-        self.chosenView.addItem(item: item)
+        self.chosenView?.addItem(item: item)
     }
     
     public func startProcessing() -> [ChosenItem] {
-        return  self.chosenView.items
+        return  self.chosenView?.items ?? []
     }
     
 }
@@ -227,19 +236,19 @@ extension GalleryController: PagesControllerDelegate {
 
 extension GalleryController: ImageControllerDelegate {
     public func didAddImage(image: Image) {
-        self.chosenView.addImage(image: image)
+        self.chosenView?.addImage(image: image)
         self.imageDelegate?.didAddImage(image: image)
     }
     
     public func didRemoveImage(image: Image) {
         self.imageDelegate?.didRemoveImage(image: image)
-        self.chosenView.removeImage(image: image)
+        self.chosenView?.removeImage(image: image)
     }
 }
 
 extension GalleryController: VideosControllerDelegate {
     public func didAddVideo(video: Video) {
-        self.chosenView.addVideo(video: video)
+        self.chosenView?.addVideo(video: video)
         self.videoDelegate?.didAddVideo(video: video)
     }
     

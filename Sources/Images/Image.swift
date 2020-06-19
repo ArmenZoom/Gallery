@@ -6,7 +6,7 @@ public class Image: Equatable {
     
     public let asset: PHAsset
     
-    public var id: String = String.randomString(length: 10)
+    public var id: String
     public var localIdentifier: String {
         return asset.localIdentifier
     }
@@ -15,6 +15,7 @@ public class Image: Equatable {
     
     init(asset: PHAsset) {
         self.asset = asset
+        self.id = asset.localIdentifier
     }
 }
 
@@ -43,6 +44,44 @@ extension Image {
             options: options) { (image, _) in
                 completion(image)
         }
+    }
+    
+    public func fetchThumbnail(size: CGSize = CGSize(width: 100, height: 100), completion: @escaping (UIImage?) -> Void) {
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        
+        PHImageManager.default().requestImage( for: asset, targetSize: size, contentMode: .aspectFill, options: options) { image, _ in
+            DispatchQueue.main.async {
+                completion(image)
+            }
+        }
+    }
+    
+    
+    public func customFetch(completion: @escaping (_ originalImage: UIImage?, _ thumbnailImage: UIImage?) -> Void) {
+        
+        var image: UIImage?
+        var originalImage: UIImage?
+        var isAdded = false
+        
+        self.fetchThumbnail { (thumbnailImage ) in
+            image = thumbnailImage
+            if let img = thumbnailImage, !isAdded {
+                if let orImage = originalImage {
+                    isAdded = true
+                    completion(orImage, img)
+                }
+            }
+        }
+        
+        self.resolve { (originImage) in
+            originalImage = originImage
+            if let img = originImage, let thumbnail = image, !isAdded {
+                isAdded = true
+                completion(img, thumbnail)
+            }
+        }
+        
     }
     
     public func fetchURL(completion: @escaping (_ url: URL?) -> Void) {

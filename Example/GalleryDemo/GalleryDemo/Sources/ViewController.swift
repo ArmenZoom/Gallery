@@ -41,16 +41,10 @@ class ViewController: UIViewController {
     
     gallery = GalleryController(videoDelegate: self, imageDelegate: self, pagesDelegate: self)
     gallery.delegate = self
-   
+    
     switch configIndex {
     case 0:
       self.config1()
-    case 1:
-      self.config2()
-    case 2:
-      self.config3()
-    case 3:
-      self.config3()
     default:
       self.config1()
     }
@@ -61,84 +55,20 @@ class ViewController: UIViewController {
     Config.tabsToShow = [.videoTab, .imageTab]
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
+    Config.Grid.FrameView.fillColor   = .clear
+    Config.Grid.FrameView.borderColor = .clear
     Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
-    Config.Font.Text.bold = UIFont.boldSystemFont(ofSize: 10)
-    Config.Grid.FrameView.fillColor = .clear
-    Config.Grid.FrameView.borderColor = .clear
-    Config.RefreshControl.isActive = true
-    Config.PageIndicator.isEnable = true
-    Config.PageIndicator.backgroundColor = .white
-    Config.PageIndicator.textColor = .black
-    Config.Limit.videoCount = 0
-    Config.Limit.imageCount = 0
-    Config.Limit.allItemsCount = Int.max
-    Config.SelectedView.isEnabled = true
-    Config.CellSelectedStyle.isEnabled = false
-    Config.SelectedView.Collection.isEnableTimeView = false
-  }
-  
-  func config2() {
-    Config.RefreshControl.isActive = true
-    Config.Grid.CloseButton.tintColor = .clear
-    Config.tabsToShow = [.videoTab]
-    Config.Grid.Dimension.cellSpacing = 10
-    Config.Grid.Dimension.lineSpacing = 10
-    Config.Grid.FrameView.fillColor = .clear
-    Config.Grid.FrameView.borderColor = .clear
-    Config.Limit.videoMaxDuration = 2000
+    Config.Limit.videoMaxDuration = 600
     Config.Limit.videoMinDuration = 3
-    Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
-    Config.Font.Text.bold = UIFont.boldSystemFont(ofSize: 10)//sfProDisplay(fontType: FontType.black, size: 10)
-    Config.PageIndicator.isEnable = true
-    Config.PageIndicator.backgroundColor = .white
-    Config.PageIndicator.textColor = .black
     Config.Limit.videoCount = 0
     Config.Limit.imageCount = 0
     Config.Limit.allItemsCount = Int.max
-    Config.SelectedView.isEnabled = false
-    Config.CellSelectedStyle.isEnabled = false
-  }
-  
-  func config3() {
-         Config.Grid.CloseButton.tintColor = .clear
-         Config.tabsToShow = [.videoImageTab]
-         Config.Grid.Dimension.cellSpacing = 10
-         Config.Grid.Dimension.lineSpacing = 10
-         Config.Grid.FrameView.fillColor = .clear
-         Config.Grid.FrameView.borderColor = .clear
-         Config.Limit.videoMaxDuration = 2000
-         Config.Limit.videoMinDuration = 3
-         Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
-         Config.Font.Text.bold = UIFont.boldSystemFont(ofSize: 10)
-         Config.RefreshControl.isActive = true
-         Config.PageIndicator.isEnable = true
-         Config.PageIndicator.backgroundColor = .white
-         Config.PageIndicator.textColor = .black
-         Config.Limit.videoCount = 0
-         Config.Limit.imageCount = 0
-         Config.Limit.allItemsCount = Int.max
-         Config.SelectedView.isEnabled = false
-         Config.CellSelectedStyle.isEnabled = true
-   }
-  
-  func config4() {
-    Config.Grid.CloseButton.tintColor = .clear
-    Config.tabsToShow = [.videoTab]
-    Config.Grid.Dimension.cellSpacing = 10
-    Config.Grid.Dimension.lineSpacing = 10
-    Config.Grid.FrameView.fillColor = .clear
-    Config.Grid.FrameView.borderColor = .clear
-     Config.Limit.videoMaxDuration = 2000
-           Config.Limit.videoMinDuration = 3
-    Config.Grid.Dimension.inset = UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10)
-    Config.Font.Text.bold = UIFont.boldSystemFont(ofSize: 10)
+    Config.ImageCell.isVideoSelectedStyle = true
+    //       Config.Font.Text.bold = UIFont.sfProDisplay(fontType: FontType.black, size: 10)
     Config.RefreshControl.isActive = true
     Config.PageIndicator.isEnable = true
     Config.PageIndicator.backgroundColor = .white
     Config.PageIndicator.textColor = .black
-    Config.Limit.videoCount = 1
-    Config.Limit.imageCount = 0
-    Config.Limit.allItemsCount = Int.max
     Config.SelectedView.isEnabled = false
     Config.CellSelectedStyle.isEnabled = true
   }
@@ -149,17 +79,6 @@ class ViewController: UIViewController {
     view.insertSubview(gallery.view, at: 0)
     didMove(toParent: gallery)
     
-  
-    if let url = Bundle.main.url(forResource: "zoomerang_no_ads", withExtension: "mp4") {
-      
-      let items = Array(5...12).map { (i) -> ChosenItem in
-        let asset = i <= 8 ? AVAsset(url: url) : nil
-        return ChosenItem(id: "id\(i)", asset: asset, duration: TimeInterval(i))
-      }
-      gallery.setupSelectedItems(items: items)
-      
-    }
-//    self.button.bringSubviewToFront(self.view)
     view.layoutIfNeeded()
   }
   
@@ -181,30 +100,33 @@ class ViewController: UIViewController {
 extension ViewController: VideosControllerDelegate {
   func didAddVideo(video: Video) {
     self.videos.append(video)
-       print("add video")
+    print("add video")
   }
   
   func didRemoveVideo(video: Video) {
-     print("remov video")
+    print("remov video")
   }
   
   
   func didSelectVideo(video: Video) {
-    video.fetchAVAsset { (asset) in
-    }
-    video.fetchURL { (url) in
-      
-      if let outURL = url {
-        
-        DispatchQueue.main.async {
-          
-          print(url)
-          
-        }
-      }
-      
-    }
+    print("add video")
   }
+  //  {
+  //    video.fetchAVAsset { (asset) in
+  //    }
+  //    video.fetchURL { (url) in
+  //
+  //      if let outURL = url {
+  //
+  //        DispatchQueue.main.async {
+  //
+  //          print(url)
+  //
+  //        }
+  //      }
+  //
+  //    }
+  //  }
 }
 
 extension ViewController: ImageControllerDelegate {
@@ -244,9 +166,7 @@ extension ViewController: GalleryControllerDelegate {
   func didRemove(_ controller: GalleryController, index: Int) {
     
   }
-  
 
-  
 }
 
 

@@ -7,6 +7,36 @@ class ImageCell: UICollectionViewCell {
     lazy var highlightOverlay: UIView = self.makeHighlightOverlay()
     lazy var frameView: FrameView = self.makeFrameView()
     
+    lazy var selectedOverlayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.clear
+        view.layer.cornerRadius = 8
+        view.layer.masksToBounds = true
+        view.layer.borderWidth = 3
+        view.isUserInteractionEnabled = false
+        view.layer.borderColor = UIColor(red: 252/255, green: 17/255, blue: 83/255, alpha: 1.0).cgColor
+        return view
+    }()
+    
+    var choosen: Bool = false {
+        didSet {
+            if self.choosen != oldValue {
+                self.didUpdateSelectedState(selected: self.choosen)
+            }
+        }
+    }
+    
+    func didUpdateSelectedState(selected: Bool) {
+        if Config.ImageCell.selectedStyleVideo {
+            if self.choosen {
+                self.contentView.addSubview(self.selectedOverlayView)
+                self.updateView()
+            } else {
+                self.selectedOverlayView.removeFromSuperview()
+            }
+        }
+    }
+    
     // MARK: - Initialization
     
     override init(frame: CGRect) {
@@ -41,7 +71,8 @@ class ImageCell: UICollectionViewCell {
     // MARK: - Setup
     
     func setup() {
-        [imageView, frameView, highlightOverlay].forEach {
+        let array = Config.ImageCell.selectedStyleVideo ? [imageView] : [imageView, frameView, highlightOverlay]
+        array.forEach {
             self.contentView.addSubview($0)
         }
         
@@ -90,11 +121,20 @@ class ImageCell: UICollectionViewCell {
         
         return view
     }
-    
+  
     private func makeFrameView() -> FrameView {
         let frameView = FrameView(frame: .zero)
         frameView.alpha = 0
         
         return frameView
+    }
+    
+    func updateView() {
+        self.selectedOverlayView.frame = self.bounds
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.updateView()
     }
 }

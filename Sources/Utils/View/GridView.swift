@@ -41,20 +41,7 @@ public class GridView: UIView {
         [collectionView, bottomView, emptyView, loadingIndicator].forEach {
             addSubview($0)
         }
-
-        //    [closeButton, arrowButton].forEach {
-        //      topView.addSubview($0)
-        //    }
-
-        //    [bottomBlurView, doneButton].forEach {
-        //        bottomView.addSubview($0)
-        //    }
-
         Constraint.on(
-        //      topView.leftAnchor.constraint(equalTo: topView.superview!.leftAnchor),
-        //      topView.rightAnchor.constraint(equalTo: topView.superview!.rightAnchor),
-        //      topView.heightAnchor.constraint(equalToConstant: 0),
-
             loadingIndicator.centerXAnchor.constraint(equalTo: loadingIndicator.superview!.centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: loadingIndicator.superview!.centerYAnchor)
         )

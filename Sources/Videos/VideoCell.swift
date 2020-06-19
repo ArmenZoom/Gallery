@@ -14,28 +14,13 @@ class VideoCell: ImageCell {
         v.backgroundColor = UIColor.white.withAlphaComponent(0.90)
         return v
     }()
-   
-    lazy var selectedOverlayView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.clear
-        view.layer.cornerRadius = 8
-        view.layer.masksToBounds = true
-        view.layer.borderWidth = 3
-        view.isUserInteractionEnabled = false
-        view.layer.borderColor = UIColor(red: 252/255, green: 17/255, blue: 83/255, alpha: 1.0).cgColor
-        return view
-    }()
     
-    var choosen: Bool = false {
-        didSet {
-            if self.choosen != oldValue {
-                if self.choosen {
-                    self.addSubview(self.selectedOverlayView)
-                    self.updateView()
-                } else {
-                    self.selectedOverlayView.removeFromSuperview()
-                }
-            }
+    override func didUpdateSelectedState(selected: Bool) {
+        if self.choosen {
+            self.addSubview(self.selectedOverlayView)
+            self.updateView()
+        } else {
+            self.selectedOverlayView.removeFromSuperview()
         }
     }
     
@@ -48,9 +33,6 @@ class VideoCell: ImageCell {
                 } else {
                     self.removeShadow()
                 }
-//                [bottomOverlay, durationLabel].forEach {
-//                    $0.isHidden = !self.canSelect
-//                }
             }
         }
     }
@@ -121,8 +103,8 @@ class VideoCell: ImageCell {
         return gradient
     }
     
-    func updateView() {
-        self.selectedOverlayView.frame = self.bounds
+    override func updateView() {
+        super.updateView()
         self.gradientLayer.frame = bottomOverlay.bounds
     }
     
