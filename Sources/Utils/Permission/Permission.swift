@@ -9,6 +9,7 @@ struct Permission {
     case restricted
     case denied
     case authorized
+    case limited
   }
 
   struct Photos {
@@ -22,6 +23,8 @@ struct Permission {
         return .denied
       case .authorized:
         return .authorized
+      case .limited:
+        return .limited
       }
     }
 
