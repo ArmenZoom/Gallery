@@ -57,8 +57,8 @@ public class GalleryController: UIViewController {
     }
     
     func loadControllers() {
+        self.view.subviews.forEach({ $0.removeFromSuperview() })
         if let pagesController = makePagesController() {
-            // Is multi select
             if Config.SelectedView.isEnabled {
                 self.view.addSubview(stackContentView)
                 self.view.addSubview(pagesItemsContentView)

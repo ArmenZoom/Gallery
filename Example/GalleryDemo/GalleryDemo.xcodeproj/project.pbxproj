@@ -12,7 +12,6 @@
 		D5C7F75B1C3BCA1E008CDDBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5C7F7571C3BCA1E008CDDBA /* Assets.xcassets */; };
 		D5C7F75C1C3BCA1E008CDDBA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C7F7591C3BCA1E008CDDBA /* AppDelegate.swift */; };
 		D5C7F75D1C3BCA1E008CDDBA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C7F75A1C3BCA1E008CDDBA /* ViewController.swift */; };
-		EA2E0A512465BDA100CC5FE2 /* zoomerang_no_ads.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EA2E0A502465BDA100CC5FE2 /* zoomerang_no_ads.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +24,6 @@
 		D5C7F7591C3BCA1E008CDDBA /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D5C7F75A1C3BCA1E008CDDBA /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E7EEE357D42BD2221D88982D /* Pods_GalleryDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GalleryDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EA2E0A502465BDA100CC5FE2 /* zoomerang_no_ads.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = zoomerang_no_ads.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +107,6 @@
 			children = (
 				D5C7F7591C3BCA1E008CDDBA /* AppDelegate.swift */,
 				D5C7F75A1C3BCA1E008CDDBA /* ViewController.swift */,
-				EA2E0A502465BDA100CC5FE2 /* zoomerang_no_ads.mp4 */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -180,7 +177,6 @@
 			files = (
 				D5C7F75B1C3BCA1E008CDDBA /* Assets.xcassets in Resources */,
 				D5C7F74E1C3BC9CE008CDDBA /* LaunchScreen.storyboard in Resources */,
-				EA2E0A512465BDA100CC5FE2 /* zoomerang_no_ads.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

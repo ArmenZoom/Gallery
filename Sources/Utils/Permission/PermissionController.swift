@@ -57,6 +57,10 @@ class PermissionController: UIViewController {
 
       return
     }
+    
+    if Permission.Photos.status == .denied {
+        return
+    }
 
     DispatchQueue.main.async {
       self.delegate?.permissionControllerDidFinish(self)

@@ -30,7 +30,7 @@ class ViewController: UIViewController {
   
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    button.center = CGPoint(x: view.bounds.size.width/2, y: view.bounds.size.height/2)
+    button.center = CGPoint(x: view.bounds.size.width * 0.5, y: view.bounds.size.height * 0.2)
   }
   
   @objc func buttonTouched(_ button: UIButton) {
@@ -63,7 +63,7 @@ class ViewController: UIViewController {
     Config.Limit.videoCount = 0
     Config.Limit.imageCount = 0
     Config.Limit.allItemsCount = Int.max
-    Config.ImageCell.isVideoSelectedStyle = true
+    Config.ImageCell.selectedStyleVideo = true
     //       Config.Font.Text.bold = UIFont.sfProDisplay(fontType: FontType.black, size: 10)
     Config.RefreshControl.isActive = true
     Config.PageIndicator.isEnable = true
