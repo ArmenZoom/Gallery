@@ -42,7 +42,9 @@ extension Image {
             targetSize: targetSize,
             contentMode: .default,
             options: options) { (image, _) in
+            DispatchQueue.main.async {
                 completion(image)
+            }
         }
     }
     
@@ -128,17 +130,21 @@ extension Image {
                 return true
             }
             mPhasset.requestContentEditingInput(with: options, completionHandler: { (contentEditingInput, info) in
-                completionHandler(contentEditingInput!.fullSizeImageURL)
+                DispatchQueue.main.async {
+                    completionHandler(contentEditingInput?.fullSizeImageURL)
+                }
             })
         } else if mPhasset.mediaType == .video {
             let options: PHVideoRequestOptions = PHVideoRequestOptions()
             options.version = .original
             PHImageManager.default().requestAVAsset(forVideo: mPhasset, options: options, resultHandler: { (asset, audioMix, info) in
-                if let urlAsset = asset as? AVURLAsset {
-                    let localVideoUrl = urlAsset.url
-                    completionHandler(localVideoUrl)
-                } else {
-                    completionHandler(nil)
+                DispatchQueue.main.async {
+                    if let urlAsset = asset as? AVURLAsset {
+                        let localVideoUrl = urlAsset.url
+                        completionHandler(localVideoUrl)
+                    } else {
+                        completionHandler(nil)
+                    }
                 }
             })
         }

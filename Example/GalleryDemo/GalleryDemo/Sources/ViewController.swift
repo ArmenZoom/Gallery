@@ -100,7 +100,8 @@ class ViewController: UIViewController {
 extension ViewController: VideosControllerDelegate {
   func didAddVideo(video: Video) {
     self.videos.append(video)
-    print("add video")
+    didSelectVideo(video: video)
+//    print("add video")
   }
   
   func didRemoveVideo(video: Video) {
@@ -110,6 +111,31 @@ extension ViewController: VideosControllerDelegate {
   
   func didSelectVideo(video: Video) {
     print("add video")
+    video.fetchThumbnail { (img) in
+      print("aaaaa " ,img?.size ?? CGSize.zero)
+    }
+    
+//    video.fetchThumbnail(size: CGSize(width: 2000, height: 2000)) { (img) in
+//      print("aaaaa2 " ,img?.size ?? CGSize.zero)
+//    }
+    
+//    video.fetchAVAsset { (asset) in
+//      print("aaaaa3 " , asset?.duration ?? -1.0 )
+//    }
+//    
+//    video.fetchPlayerItem { (playerItem) in
+//      print("aaaaa4 " , playerItem?.duration ?? -1.0 )
+//
+//    }
+//    
+//    video.fetchURL { (url) in
+//      print("aaaaa5 " , url?.absoluteString ?? "empty" )
+//
+//    }
+    
+//    video.customFetch { (img, asset, thumbnail) in
+//       print("aaaaa6 " , img?.size ?? CGSize.zero, "video ", asset?.duration ?? -1.0, "thumbnail ", thumbnail?.size ?? CGSize.zero)
+//    }
   }
   //  {
   //    video.fetchAVAsset { (asset) in
