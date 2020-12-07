@@ -6,6 +6,7 @@ class VideosLibrary {
   
     var items: [Video] = []
     var fetchResults: PHFetchResult<PHAsset>?
+    var albumsFetchResults = [PHFetchResult<PHAssetCollection>]()
 
   
     // MARK: - Initialization
@@ -27,24 +28,32 @@ class VideosLibrary {
 
 
     fileprivate func reloadSync() {
-        fetchResults = PHAsset.fetchAssets(with: .video, options: Utils.fetchVideoOptions())
-        items = []
-        fetchResults?.enumerateObjects({ (asset, _, _) in
-            self.items.append(Video(asset: asset))
-        })
         
-        if Config.tabsToShow == [.videoImageTab] {
-            let imagesResault = PHAsset.fetchAssets(with: .image, options: nil)
-              imagesResault.enumerateObjects { (asset, _, _) in
-                  self.items.append(Video(asset: asset, isVideo: false))
-              }
+        let types: [PHAssetCollectionType] = [.smartAlbum, .album]
+        
+        albumsFetchResults = types.map {
+            return PHAssetCollection.fetchAssetCollections(with: $0, subtype: .smartAlbumUserLibrary, options: nil)
         }
-        self.items.sort { (item1, item2) -> Bool in
-            let date1 = item1.asset.creationDate ?? Date()
-            let date2 = item2.asset.creationDate ?? Date()
-            return  date1 > date2
+        
+        items = []
+        for result in albumsFetchResults {
+            result.enumerateObjects({ (collection, _, _) in
+                if collection.assetCollectionSubtype == .smartAlbumUserLibrary {
+                    let itemsFetchResult = PHAsset.fetchAssets(in: collection, options: nil)
+                    itemsFetchResult.enumerateObjects({ (asset, count, stop) in
+                        if asset.mediaType == .video {
+                            if asset.duration >= Config.Limit.videoMinDuration && asset.duration <= Config.Limit.videoMaxDuration {
+                                self.items.insert(Video(asset: asset, isVideo: asset.duration != 0), at: 0)
+                            }
+                        } else if Config.tabsToShow == [.videoImageTab] && asset.mediaType == .image {
+                            self.items.insert(Video(asset: asset, isVideo: false), at: 0)
+                        }
+                    })
+                }
+            })
         }
-
+        
+        print(self.items.count)
     }
     
 }

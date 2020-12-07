@@ -52,7 +52,8 @@ class ViewController: UIViewController {
   }
   
   func config1() {
-    Config.tabsToShow = [.videoTab, .imageTab]
+    Config.tabsToShow = [.videoImageTab]
+//    Config.tabsToShow = [.videoTab, .imageTab]
     Config.Grid.Dimension.cellSpacing = 10
     Config.Grid.Dimension.lineSpacing = 10
     Config.Grid.FrameView.fillColor   = .clear
