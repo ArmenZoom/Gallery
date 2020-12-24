@@ -36,6 +36,10 @@ public struct Config {
         public static var selectedFont: UIFont = UIFont.boldSystemFont(ofSize: 14)
         public static var textColor: UIColor = UIColor.white
         public static var isEnable: Bool = true
+        
+        public static var imagesTitle: String = "PHOTOS"
+        public static var videosTitle: String = "VIDEOS"
+        public static var cameraTitle: String = "CAMERA"
     }
     
     public struct SelectedView {

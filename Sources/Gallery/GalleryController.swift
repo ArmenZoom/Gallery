@@ -124,7 +124,7 @@ public class GalleryController: UIViewController {
     
     func makeImagesController() -> ImagesController {
         let controller = ImagesController(cart: cart)
-        controller.title = "Gallery.Images.Title".g_localize(fallback: "PHOTOS")
+        controller.title = Config.PageIndicator.imagesTitle
         controller.delegate = self
         imagesController = controller
         return controller
@@ -132,14 +132,14 @@ public class GalleryController: UIViewController {
     
     func makeCameraController() -> CameraController {
         let controller = CameraController(cart: cart)
-        controller.title = "Gallery.Camera.Title".g_localize(fallback: "CAMERA")
+        controller.title = Config.PageIndicator.cameraTitle //"Gallery.Camera.Title".g_localize(fallback: "CAMERA")
         
         return controller
     }
     
     func makeVideosController() -> VideosController {
         let controller = VideosController(cart: cart)
-        controller.title = "Gallery.Videos.Title".g_localize(fallback: "VIDEOS")
+        controller.title = Config.PageIndicator.videosTitle //"Gallery.Videos.Title".g_localize(fallback: "VIDEOS")
         controller.delegate = self
         videoController = controller
         
