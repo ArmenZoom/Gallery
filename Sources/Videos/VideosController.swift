@@ -226,7 +226,12 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        if Config.CellSelectedStyle.isEnabled {
+        if Config.CellSelectedStyle.isCounter {
+            let item = items[(indexPath as NSIndexPath).item]
+            if self.cart.canAddImageFromCart {
+                cart.add(item)
+            }
+        } else if Config.CellSelectedStyle.isEnabled {
             let item = items[(indexPath as NSIndexPath).item]
             if cart.videos.contains(item) {
                 cart.remove(item)
@@ -257,8 +262,24 @@ extension VideosController: UICollectionViewDataSource, UICollectionViewDelegate
     }
     
     func configureFrameView(_ cell: VideoCell, indexPath: IndexPath) {
-        if Config.CellSelectedStyle.isEnabled {
-             let item = items[(indexPath as NSIndexPath).item]
+        let item = items[(indexPath as NSIndexPath).item]
+
+        if Config.CellSelectedStyle.isCounter {
+            var count = 0
+            for video in cart.videos {
+                if video.localIdentifier == item.localIdentifier {
+                    count += 1
+                }
+            }
+            if count != 0 {
+                cell.frameView.g_quickFade()
+                cell.frameView.label.text = "\(count)"
+                cell.choosen = true
+            } else {
+                cell.choosen = false
+                cell.frameView.alpha = 0
+            }
+        } else if Config.CellSelectedStyle.isEnabled {
              cell.choosen = cart.videos.index(of: item) != nil
         }
     }

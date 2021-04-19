@@ -74,7 +74,7 @@ class ImagesController: UIViewController {
         gridView.arrowButton.updateText(album.collection.localizedTitle ?? "")
         items = album.items
         gridView.collectionView.reloadData()
-        gridView.collectionView.g_scrollToTop()
+//        gridView.collectionView.g_scrollToTop()
         gridView.emptyView.isHidden = !items.isEmpty
     }
     
@@ -214,7 +214,13 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if Config.CellSelectedStyle.isEnabled {
+        
+        if Config.CellSelectedStyle.isCounter {
+            let item = items[(indexPath as NSIndexPath).item]
+            if self.cart.canAddImageFromCart {
+                cart.add(item)
+            }
+        } else if Config.CellSelectedStyle.isEnabled {
             let item = items[(indexPath as NSIndexPath).item]
             if cart.images.contains(item) {
                 cart.remove(item)
@@ -247,7 +253,23 @@ extension ImagesController: UICollectionViewDataSource, UICollectionViewDelegate
     func configureFrameView(_ cell: ImageCell, indexPath: IndexPath) {
         let item = items[(indexPath as NSIndexPath).item]
         
-        if Config.CellSelectedStyle.isEnabled {
+        
+        if Config.CellSelectedStyle.isCounter {
+            var count = 0
+            for image in cart.images {
+                if image.localIdentifier == item.localIdentifier {
+                    count += 1
+                }
+            }
+            if count != 0 {
+                cell.frameView.g_quickFade()
+                cell.frameView.label.text = "\(count)"
+                cell.choosen = true
+            } else {
+                cell.choosen = false
+                cell.frameView.alpha = 0
+            }
+        } else if Config.CellSelectedStyle.isEnabled {
             if let index = cart.images.index(of: item) {
                 cell.frameView.g_quickFade()
                 cell.frameView.label.text = "\(index + 1)"

@@ -152,7 +152,8 @@ public struct Config {
     
     public struct CellSelectedStyle {
         public static var isEnabled = true
-        
+        public static var isCounter = false
+
     }
     
     public struct ImageCell {
