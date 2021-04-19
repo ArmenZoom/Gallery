@@ -16,23 +16,20 @@ class VideoCell: ImageCell {
     }()
     
     override func didUpdateSelectedState(selected: Bool) {
-        if self.choosen {
-            self.addSubview(self.selectedOverlayView)
-            self.updateView()
-        } else {
-            self.selectedOverlayView.removeFromSuperview()
+        if Config.ImageCell.borderVisibility {
+            if self.choosen {
+                self.addSubview(self.selectedOverlayView)
+                self.updateView()
+            } else {
+                self.selectedOverlayView.removeFromSuperview()
+            }
         }
     }
     
     var canSelect: Bool = true {
         didSet {
             if self.canSelect != oldValue {
-                self.forgraundView.isHidden = self.canSelect
-                if self.canSelect {
-                    self.addShadow()
-                } else {
-                    self.removeShadow()
-                }
+                self.didUpdateSelectedState(selected: self.canSelect)
             }
         }
     }

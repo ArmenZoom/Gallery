@@ -157,6 +157,6 @@ public struct Config {
     }
     
     public struct ImageCell {
-        public static var selectedStyleVideo: Bool = false
+        public static var borderVisibility: Bool = false
     }
 }

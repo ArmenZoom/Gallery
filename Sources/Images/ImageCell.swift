@@ -27,7 +27,7 @@ class ImageCell: UICollectionViewCell {
     }
     
     func didUpdateSelectedState(selected: Bool) {
-        if Config.ImageCell.selectedStyleVideo {
+        if Config.ImageCell.borderVisibility {
             if self.choosen {
                 self.contentView.addSubview(self.selectedOverlayView)
                 self.updateView()
@@ -71,7 +71,7 @@ class ImageCell: UICollectionViewCell {
     // MARK: - Setup
     
     func setup() {
-        let array = Config.ImageCell.selectedStyleVideo ? [imageView] : [imageView, frameView, highlightOverlay]
+        let array = Config.ImageCell.borderVisibility ? [imageView] : [imageView, frameView, highlightOverlay]
         array.forEach {
             self.contentView.addSubview($0)
         }
