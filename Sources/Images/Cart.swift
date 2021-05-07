@@ -9,6 +9,7 @@ public protocol CartDelegate: class {
     func cart(_ cart: Cart, didRemove video: Video)
     
     func cartDidReload(_ cart: Cart)
+    func cartDidUpdate(_ cart: Cart)
     func cart(_ cart: Cart, canAddNewItem: Bool)
 }
 
@@ -91,10 +92,10 @@ public class Cart {
     }
     
     
-    public func reload( images: [Image]) {
+    public func update(images: [Image]) {
         self.images = images
         for case let delegate as CartDelegate in delegates.allObjects {
-            delegate.cartDidReload(self)
+            delegate.cartDidUpdate(self)
         }
     }
     
@@ -121,17 +122,23 @@ public class Cart {
     }
     
     
-    public func reload(videos: [Video]) {
+    public func update(videos: [Video]) {
         self.videos = videos
-        
+
         for case let delegate as CartDelegate in delegates.allObjects {
-            delegate.cartDidReload(self)
+            delegate.cartDidUpdate(self)
         }
     }
     
-    public func reload() {
+//    public func reload() {
+//        for case let delegate as CartDelegate in delegates.allObjects {
+//            delegate.cartDidReload(self)
+//        }
+//    }
+    
+    public func update() {
         for case let delegate as CartDelegate in delegates.allObjects {
-            delegate.cartDidReload(self)
+            delegate.cartDidUpdate(self)
         }
     }
     

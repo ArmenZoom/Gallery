@@ -32,7 +32,7 @@ public class ChosenView: UIView {
                 }
             }
             self.cart.canAddNewItems = self.getFirstEmtyIndex() != nil
-            self.reload()
+            self.update()
         }
     }
     
@@ -76,7 +76,7 @@ public class ChosenView: UIView {
             item.video = video
             self.cart.canAddNewItems = index < (self.items.count-1)
         }
-        self.reload()
+        self.update()
     }
     
     func removeVideo(video: Video) {
@@ -84,7 +84,7 @@ public class ChosenView: UIView {
             self.items[index].invalidate()
             self.cart.canAddNewItems = true
         }
-        self.reload()
+        self.update()
     }
     
     func addImage(image: Image) {
@@ -96,7 +96,7 @@ public class ChosenView: UIView {
             self.cart.canAddNewItems = index < (self.items.count-1)
         }
         
-        self.reload()
+        self.update()
     }
     
     func removeImage(image: Image) {
@@ -104,7 +104,7 @@ public class ChosenView: UIView {
             self.items[index].invalidate()
             self.cart.canAddNewItems = true
         }
-        self.reload()
+        self.update()
     }
     
     public func updateItem(item: ChosenItem) {
@@ -162,13 +162,13 @@ public class ChosenView: UIView {
     
     // MARK: - Reload
     
-    func reload() {
+    func update() {
         if let index = self.getFirstEmtyIndex() {
             self.cart.addedVideoMinDuration = self.items[index].duration
         } else {
             self.cart.addedVideoMinDuration = 0
         }
-        self.cart.reload()
+        self.cart.update()
     }
     
     func makeCollectionView() -> UICollectionView {
@@ -190,6 +190,9 @@ extension ChosenView: CartDelegate {
     public func cart(_ cart: Cart, didRemove video: Video){}
     public func cart(_ cart: Cart, canAddNewItem: Bool) {}
     
+    public func cartDidUpdate(_ cart: Cart) {
+        self.collectionView.reloadData()
+    }
     public func cartDidReload(_ cart: Cart) {
         self.collectionView.reloadData()
     }
@@ -258,7 +261,7 @@ extension ChosenView: ChosenCellDelegate {
         self.delegate?.didRemove(self, index: indexPath.row)
         item.invalidate()
         self.cart.canAddNewItems = true
-        self.reload()
+        self.update()
     }
     
     public func didEdit(_ view: ChosenCell, indexPath: IndexPath) {

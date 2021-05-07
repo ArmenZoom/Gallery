@@ -20,26 +20,7 @@ class VideosLibrary {
         }
         return nil
     }
-    
-    func getFolderNameFromIndex(index: Int) -> String? {
-        let names = self.names
-        if index < names.count && index >= 0 {
-            return names[index]
-        }
-        return nil
-    }
-    
-    func getItemsFromAlbumName(name: String) -> [Video] {
-        var videos: [Video] = []
-        for album in albums {
-            if name == album.name, let objs = album.items as? [Video] {
-                videos.append(contentsOf: objs)
-            }
-        }
-        return videos
-    }
 
-  
     // MARK: - Initialization
 
     init() {

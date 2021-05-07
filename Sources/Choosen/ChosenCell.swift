@@ -61,9 +61,9 @@ public class ChosenCell: UICollectionViewCell {
         removeButton.isHidden = self.removedButtonHide
         self.editButton.isHidden = true
         if let asset = item.video?.asset {
-            imageView.g_loadImage(asset)
+            imageView.g_loadImageChoosen(asset)
         } else if let asset = item.image?.asset {
-            imageView.g_loadImage(asset)
+            imageView.g_loadImageChoosen(asset)
         } else if let avasset = item.asset {
             imageView.g_loadImage(avasset)
         } else {

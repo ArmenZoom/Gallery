@@ -11,8 +11,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     return controller
   }()
 
-  lazy var viewController: ViewController = {
-    let controller = ViewController()
+  lazy var viewController: TutorialChooseVideoUploadViewController = {
+    let controller = TutorialChooseVideoUploadViewController()
     return controller
   }()
 

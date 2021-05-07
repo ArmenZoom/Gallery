@@ -286,6 +286,10 @@ extension VideosController: MakeDropDownDelegate {
 
 
 extension VideosController: CartDelegate {
+    public func cartDidUpdate(_ cart: Cart) {
+        self.gridView.collectionView.reloadItems(at: self.gridView.collectionView.indexPathsForVisibleItems)
+    }
+    
     public func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool) { }
     public func cart(_ cart: Cart, didRemove image: Image) {}
     

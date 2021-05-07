@@ -164,6 +164,8 @@ class CameraController: UIViewController {
 }
 
 extension CameraController: CartDelegate {
+    func cartDidUpdate(_ cart: Cart) {}
+    
     func cart(_ cart: Cart, didAdd video: Video, newlyTaken: Bool) { }
     func cart(_ cart: Cart, didRemove video: Video) { }
     

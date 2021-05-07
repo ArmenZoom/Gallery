@@ -144,7 +144,7 @@ class ImagesController: UIViewController {
     func makeGridView() -> GridView {
         let view = GridView()
         view.bottomView.alpha = 0
-        
+        view.delegate = self
         return view
     }
     
@@ -230,6 +230,26 @@ class ImagesController: UIViewController {
     @objc func testLabelTapped() {
         self.dropDown.showDropDown(height: self.gridView.bounds.height)
     }
+    
+    func updateLibrary() {
+        library.reload {
+            if let album = self.selectedAlbum,
+               let newAlbum = self.library.findAlbumFromName(album.name) {
+                self.show(album: newAlbum)
+            } else {
+                if let album = self.library.albums.first {
+                    self.show(album: album)
+                }
+            }
+        }
+    }
+    
+}
+
+extension ImagesController: GridViewDelegate {
+    func reloadCollectionView() {
+        self.updateLibrary()
+    }
 }
 
 extension ImagesController: MakeDropDownDataSourceProtocol {
@@ -294,16 +314,16 @@ extension ImagesController: PageAware {
 }
 
 extension ImagesController: CartDelegate {
+    func cartDidUpdate(_ cart: Cart) {
+        refreshView()
+    }
+    
     func cart(_ cart: Cart, didAdd video: Video, newlyTaken: Bool) { }
     func cart(_ cart: Cart, didRemove video: Video) { }
     
     func cart(_ cart: Cart, didAdd image: Image, newlyTaken: Bool) {
         self.delegate?.didAddImage(image: image)
         refreshView()
-
-        if newlyTaken {
-            refreshSelectedAlbum()
-        }
     }
 
     func cart(_ cart: Cart, didRemove image: Image) {

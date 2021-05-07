@@ -6,30 +6,14 @@ class ImagesLibrary {
     var albums: [Album] = []
     var albumsFetchResults = [PHFetchResult<PHAssetCollection>]()
     
-    var names: [String] {
-        return albums.map { (album) -> String in
-            return album.name
-        }
-    }
-    
-    func getFolderNameFromIndex(index: Int) -> String? {
-        let names = self.names
-        if index < names.count && index >= 0 {
-            return names[index]
+    func findAlbumFromName(_ name: String) -> Album? {
+        for album in self.albums {
+            if album.name == name {
+                return album
+            }
         }
         return nil
     }
-    
-    func getItemsFromAlbumName(name: String) -> [Image] {
-        var images: [Image] = []
-        for album in albums {
-            if name == album.name, let objs = album.items as? [Image] {
-                images.append(contentsOf: objs)
-            }
-        }
-        return images
-    }
-
     
     // MARK: - Initialization
     

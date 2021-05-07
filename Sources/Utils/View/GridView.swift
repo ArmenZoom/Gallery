@@ -101,12 +101,6 @@ public class GridView: UIView {
         return button
     }
 
-    private func makeGridView() -> GridView {
-        let view = GridView()
-
-        return view
-    }
-
     private func makeCloseButton() -> UIButton {
         let button = UIButton(type: .custom)
         button.setImage(GalleryBundle.image("gallery_close")?.withRenderingMode(.alwaysTemplate), for: UIControl.State())

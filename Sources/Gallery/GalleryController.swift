@@ -98,8 +98,8 @@ public class GalleryController: UIViewController {
     }
     
     public func resetAllItems() {
-        self.cart.reload(images: [])
-        self.cart.reload(videos: [])
+        self.cart.update(images: [])
+        self.cart.update(videos: [])
     }
     
     public func removeItem(video: Video) {
