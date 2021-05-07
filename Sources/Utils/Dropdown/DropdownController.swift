@@ -160,6 +160,7 @@ class MakeDropDown: UIView{
         t.backgroundColor = .white
         t.allowsSelection = true
         t.isUserInteractionEnabled = true
+        t.backgroundColor = .white
         t.tableFooterView = UIView()
         return t
     }()

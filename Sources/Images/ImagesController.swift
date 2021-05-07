@@ -200,7 +200,7 @@ class ImagesController: UIViewController {
     
     private func makeFolderLabel() -> UILabel {
         let l = UILabel(frame: CGRect.zero)
-        l.font = Config.Font.Text.bold.withSize(16)
+        l.font = Config.DropDown.textFont
         l.textAlignment = .center
         l.textColor = .black
         l.backgroundColor = .clear

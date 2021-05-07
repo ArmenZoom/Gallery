@@ -61,6 +61,7 @@ class TutorialChooseVideoUploadViewController: UIViewController {
     Config.ImageCell.borderVisibility = false
     Config.PageIndicator.imagesTitle = "photos"
     Config.PageIndicator.videosTitle = "videos"
+    Config.DropDown.isEnabled = true
 }
   
   func initGalleryIfNeeded() {

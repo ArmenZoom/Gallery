@@ -167,5 +167,6 @@ public struct Config {
     
     public struct DropDown {
         public static var isEnabled: Bool = false
+        public static var textFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
     }
 }

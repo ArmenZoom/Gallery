@@ -201,7 +201,7 @@ public class VideosController: UIViewController {
     
     private func makeFolderLabel() -> UILabel {
         let l = UILabel(frame: CGRect.zero)
-        l.font = Config.Font.Text.bold.withSize(16)
+        l.font = Config.DropDown.textFont
         l.textAlignment = .center
         l.textColor = .black
         l.backgroundColor = .clear
@@ -213,7 +213,7 @@ public class VideosController: UIViewController {
     func dropDownConfig(){
         dropDown.makeDropDownDelegate = self
         dropDown.makeDropDownDataSourceProtocol = self
-        dropDown.setUpDropDown(viewPositionReference: CGRect(x: 0, y: 0, width: 375, height: 50), offset: 0)
+        dropDown.setUpDropDown(viewPositionReference: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50), offset: 0)
         dropDown.setRowHeight(height: self.dropDownRowHeight)
         self.view.addSubview(dropDown)
     }
