@@ -59,8 +59,8 @@ class TutorialChooseVideoUploadViewController: UIViewController {
     Config.CellSelectedStyle.isCounter = true
     Config.SelectedView.Collection.isEnableTimeView = true
     Config.ImageCell.borderVisibility = false
-    Config.PageIndicator.imagesTitle = "photos"
-    Config.PageIndicator.videosTitle = "videos"
+    Config.PageIndicator.imagesTitle = "photos".uppercased()
+    Config.PageIndicator.videosTitle = "videos".uppercased()
     Config.DropDown.isEnabled = true
 }
   

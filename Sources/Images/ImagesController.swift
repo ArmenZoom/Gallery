@@ -61,19 +61,21 @@ class ImagesController: UIViewController {
             dropDownBGView.addSubview(folderNameLabel)
             dropDownBGView.addSubview(arowImageView)
             dropDownBGView.g_pinUpward()
-            dropDownBGView.g_pin(height: 50)
             
-            folderNameLabel.g_pinCenter()
+            dropDownBGView.g_pin(height: 30)
             
+            folderNameLabel.g_pin(on: .top, constant: 0)
+            folderNameLabel.g_pin(on: .centerX, constant: 0)
+
             arowImageView.g_pin(size: CGSize(width: 12, height: 12))
-            arowImageView.g_pin(on: .centerY, constant: 0)
+            arowImageView.g_pin(on: .centerY, view: folderNameLabel, constant: 0)
             arowImageView.g_pin(on: .right, view: folderNameLabel, constant: 16)
             
             dropDownLineView.g_pinDownward()
             dropDownLineView.g_pin(height: 0.5)
             
             gridView.g_pinDownward()
-            gridView.g_pin(on: .top, constant: 50)
+            gridView.g_pin(on: .top, constant: 30)
         } else {
             gridView.g_pinEdges()
         }
@@ -216,7 +218,7 @@ class ImagesController: UIViewController {
     func dropDownConfig(){
         dropDown.makeDropDownDataSourceProtocol = self
         dropDown.makeDropDownDelegate = self
-        dropDown.setUpDropDown(viewPositionReference: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width ,height: 50), offset: 0)
+        dropDown.setUpDropDown(viewPositionReference: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width ,height: 30), offset: 0)
         dropDown.setRowHeight(height: self.dropDownRowHeight)
         self.view.addSubview(dropDown)
     }

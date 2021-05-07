@@ -60,6 +60,7 @@ class AlbumCell: UITableViewCell {
     
     private func makeAlbumImageView() -> UIImageView {
         let imageView = UIImageView()
+        imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.image = GalleryBundle.image("gallery_placeholder")
