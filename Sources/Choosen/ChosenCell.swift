@@ -74,7 +74,7 @@ public class ChosenCell: UICollectionViewCell {
         if item.editable && imageView.image != nil {
             self.editButton.isHidden = false
         }
-        timeLabel.text = String(format: "%.f", item.duration) + "s"
+        timeLabel.text = String(format: "%.1f", item.duration) + "s"
         
     }
     

@@ -177,7 +177,7 @@ public class ChosenView: UIView {
         layout.minimumLineSpacing = 2
         layout.scrollDirection = .horizontal
         let c = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-        c.backgroundColor = .white
+        c.backgroundColor = .clear
         c.showsHorizontalScrollIndicator = false
         return c
     }
@@ -231,19 +231,11 @@ extension ChosenView: UICollectionViewDataSource {
 extension ChosenView: UICollectionViewDelegateFlowLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let height: CGFloat = collectionView.bounds.size.height * 0.8
-        let width = collectionView.bounds.size.height * 0.6
-
-        return CGSize(width: width, height: height)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return Config.Grid.Dimension.inset
+        return CGSize(width: 60, height: 80)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        return 10
     }
     
 }

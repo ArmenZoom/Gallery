@@ -20,7 +20,11 @@ public class GalleryController: UIViewController {
     weak var imageDelegate: ImageControllerDelegate?
     weak var pagesDelegate: PagesControllerDelegate?
     
-    lazy var stackContentView: UIView = UIView(frame: CGRect.zero)
+    lazy var stackContentView: UIView =  {
+        let v = UIView(frame: CGRect.zero)
+        v.backgroundColor = .white
+        return v
+    }()
     lazy var shadowView: UIView = self.makeShadowView()
     lazy var pagesItemsContentView: UIView = UIView(frame: CGRect.zero)
     
@@ -30,6 +34,10 @@ public class GalleryController: UIViewController {
     var imagesController: ImagesController?
     var videoController: VideosController?
     var pagesController: PagesController?
+    
+    var isIphoneX: Bool {
+        return UIApplication.shared.statusBarFrame.size.height > 40
+    }
     
     
     // MARK: - Init
@@ -72,13 +80,18 @@ public class GalleryController: UIViewController {
                 shadowView.g_pin(on: .right, view: stackContentView)
                 shadowView.g_pin(on: .top, view: stackContentView, constant: 6)
                 
+                let height: CGFloat = self.isIphoneX ? 164 : 100
                 stackContentView.g_pinDownward()
-                stackContentView.g_pin(height: 100)
+                stackContentView.g_pin(height: height)
                 
                 pagesItemsContentView.g_pinUpward()
                 pagesItemsContentView.g_pin(on: .bottom, view: stackContentView, on: .top)
                 
-                chosenView?.g_pinEdges()
+                
+                chosenView?.g_pin(on: .left, constant: 0)
+                chosenView?.g_pin(on: .right, constant: 0)
+                chosenView?.g_pin(on: .bottom, constant: self.isIphoneX ? -74 : -10)
+                chosenView?.g_pin(height: 80)
                 
                 g_addChildController(pagesController, addFromView: self.pagesItemsContentView)
             } else {
