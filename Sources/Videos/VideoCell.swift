@@ -11,7 +11,7 @@ class VideoCell: ImageCell {
     lazy var forgraundView: UIView = {
         let v = UIView(frame: .zero)
         v.isUserInteractionEnabled = false
-        v.backgroundColor = UIColor.white.withAlphaComponent(0.90)
+        v.backgroundColor = UIColor.white.withAlphaComponent(0.70)
         return v
     }()
     

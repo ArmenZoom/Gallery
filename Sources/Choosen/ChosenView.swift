@@ -188,6 +188,7 @@ extension ChosenView: CartDelegate {
     public func cart(_ cart: Cart, didRemove image: Image){}
     public func cart(_ cart: Cart, didAdd video: Video, newlyTaken: Bool){}
     public func cart(_ cart: Cart, didRemove video: Video){}
+    public func cart(_ cart: Cart, canAddNewItem: Bool) {}
     
     public func cartDidReload(_ cart: Cart) {
         self.collectionView.reloadData()

@@ -9,6 +9,7 @@ public protocol CartDelegate: class {
     func cart(_ cart: Cart, didRemove video: Video)
     
     func cartDidReload(_ cart: Cart)
+    func cart(_ cart: Cart, canAddNewItem: Bool)
 }
 
 /// Cart holds selected images and videos information
@@ -20,7 +21,15 @@ public class Cart {
     
     public var addedVideoMinDuration: Double = 0
     
-    public var canAddNewItems: Bool = true
+    public var canAddNewItems: Bool = true {
+        didSet {
+            if oldValue != self.canAddNewItems {
+                for case let delegate as CartDelegate in delegates.allObjects {
+                    delegate.cart(self, canAddNewItem: self.canAddNewItems)
+                }
+            }
+        }
+    }
     
     public var videosCount: Int {
         return videos.count + self.recordVideos.count

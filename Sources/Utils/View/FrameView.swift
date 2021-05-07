@@ -49,8 +49,8 @@ class FrameView: UIView {
   private func makeGradientLayer() -> CAGradientLayer {
     let layer = CAGradientLayer()
     layer.colors = [
-      Config.Grid.FrameView.fillColor.withAlphaComponent(0.25).cgColor,
-      Config.Grid.FrameView.fillColor.withAlphaComponent(0.4).cgColor
+      Config.Grid.FrameView.fillColor.withAlphaComponent(0.1).cgColor,
+      Config.Grid.FrameView.fillColor.withAlphaComponent(0.15).cgColor
     ]
 
     return layer

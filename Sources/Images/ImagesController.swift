@@ -12,6 +12,16 @@ class ImagesController: UIViewController {
     lazy var dropdownController: DropdownController = self.makeDropdownController()
     lazy var gridView: GridView = self.makeGridView()
     lazy var stackView: StackView = self.makeStackView()
+    lazy var lockView: UIView = self.makeLockView()
+    lazy var arowImageView: UIImageView = self.makeArrow()
+    
+    lazy var dropDownBGView: UIView = self.makeDropDownBGView()
+    lazy var dropDownLineView: UIView = self.makeDropDownBottomView()
+
+    lazy var folderNameLabel: UILabel = self.makeFolderLabel()
+    let dropDown = MakeDropDown()
+    var albums: [Album] { return self.library.albums }
+    var dropDownRowHeight: CGFloat = 80
     
     var items: [Image] = []
     let library = ImagesLibrary()
@@ -36,6 +46,7 @@ class ImagesController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        setUpGestures()
     }
     
     // MARK: - Setup
@@ -43,10 +54,39 @@ class ImagesController: UIViewController {
     func setup() {
         view.backgroundColor = UIColor.white
         view.addSubview(gridView)
-        gridView.g_pinEdges()
+        
+        if Config.DropDown.isEnabled {
+            view.addSubview(dropDownBGView)
+            dropDownBGView.addSubview(dropDownLineView)
+            dropDownBGView.addSubview(folderNameLabel)
+            dropDownBGView.addSubview(arowImageView)
+            dropDownBGView.g_pinUpward()
+            dropDownBGView.g_pin(height: 50)
+            
+            folderNameLabel.g_pinCenter()
+            
+            arowImageView.g_pin(size: CGSize(width: 12, height: 12))
+            arowImageView.g_pin(on: .centerY, constant: 0)
+            arowImageView.g_pin(on: .right, view: folderNameLabel, constant: 16)
+            
+            dropDownLineView.g_pinDownward()
+            dropDownLineView.g_pin(height: 0.5)
+            
+            gridView.g_pinDownward()
+            gridView.g_pin(on: .top, constant: 50)
+        } else {
+            gridView.g_pinEdges()
+        }
         gridView.collectionView.dataSource = self
         gridView.collectionView.delegate = self
         gridView.collectionView.register(ImageCell.self, forCellWithReuseIdentifier: String(describing: ImageCell.self))
+        
+        view.addSubview(lockView)
+        lockView.g_pinEdges()
+        
+        self.view.layoutIfNeeded()
+        self.view.layoutSubviews()
+        dropDownConfig()
     }
     
     // MARK: - Action
@@ -72,9 +112,8 @@ class ImagesController: UIViewController {
     
     func show(album: Album) {
         gridView.arrowButton.updateText(album.collection.localizedTitle ?? "")
-        items = album.items
+        items = album.items as? [Image] ?? []
         gridView.collectionView.reloadData()
-//        gridView.collectionView.g_scrollToTop()
         gridView.emptyView.isHidden = !items.isEmpty
     }
     
@@ -120,7 +159,119 @@ class ImagesController: UIViewController {
             self.gridView.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
         }
     }
+    
+    func makeLockView() -> UIView {
+        let v = UIView(frame: CGRect.zero)
+        let color = Config.LoackView.color
+        let alpha = Config.LoackView.alpha
+        v.backgroundColor = color.withAlphaComponent(alpha)
+        v.isUserInteractionEnabled = false
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.isHidden = true
+        return v
+    }
+   
+    private func makeDropDownBottomView() -> UIView {
+        let v = UIView(frame: CGRect.zero)
+        v.backgroundColor = UIColor.black
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.isHidden = false
+        v.alpha = 0.25
+        return v
+    }
+    
+    func makeDropDownBGView() -> UIView {
+        let v = UIView(frame: CGRect.zero)
+        v.backgroundColor = UIColor.clear
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.isHidden = false
+        return v
+    }
+    
+    private func makeArrow() -> UIImageView {
+        let arrow = UIImageView()
+        arrow.image = GalleryBundle.image("gallery_title_arrow")?.withRenderingMode(.alwaysTemplate)
+        arrow.tintColor = UIColor.black
+        arrow.alpha = 0.66
+        arrow.contentMode = .scaleAspectFit
+        arrow.isHidden = true
+        return arrow
+    }
+    
+    private func makeFolderLabel() -> UILabel {
+        let l = UILabel(frame: CGRect.zero)
+        l.font = Config.Font.Text.bold.withSize(16)
+        l.textAlignment = .center
+        l.textColor = .black
+        l.backgroundColor = .clear
+        l.alpha = 1.0
+        return l
+    }
+    
+    public func changeFolder() {
+        dropdownController.toggle()
+    }
+    
+    
+    func dropDownConfig(){
+        dropDown.makeDropDownDataSourceProtocol = self
+        dropDown.makeDropDownDelegate = self
+        dropDown.setUpDropDown(viewPositionReference: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width ,height: 50), offset: 0)
+        dropDown.setRowHeight(height: self.dropDownRowHeight)
+        self.view.addSubview(dropDown)
+    }
+    
+    func setUpGestures(){
+        self.dropDownBGView.isUserInteractionEnabled = true
+        let testLabelTapGesture = UITapGestureRecognizer(target: self, action: #selector(testLabelTapped))
+        self.dropDownBGView.addGestureRecognizer(testLabelTapGesture)
+    }
+    
+    @objc func testLabelTapped() {
+        self.dropDown.showDropDown(height: self.gridView.bounds.height)
+    }
 }
+
+extension ImagesController: MakeDropDownDataSourceProtocol {
+    func getDataToDropDown(cell: UITableViewCell, indexPos: Int) {
+            if let customCell = cell as? AlbumCell {
+                customCell.configure(self.albums[indexPos])
+            }
+    }
+    
+    func numberOfRows() -> Int {
+        return self.albums.count
+    }
+    
+    func selectItemInDropDown(indexPos: Int) {
+        self.folderNameLabel.text = self.albums[indexPos].name
+        let album = self.library.albums[indexPos]
+        self.selectedAlbum = album
+        self.show(album: album)
+        self.dropDown.hideDropDown()
+    }
+    
+}
+
+extension ImagesController: MakeDropDownDelegate {
+    func didShow() {
+        self.arowImageView.transform = .identity
+        UIView.animate(withDuration: 0.3, animations: {
+            self.arowImageView.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
+        }, completion: { _ in
+            
+        })
+    }
+    
+    func didHide() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.arowImageView.transform = .identity
+        }, completion: { _ in
+            
+        })
+    }
+}
+
 
 extension ImagesController: PageAware {
     
@@ -132,6 +283,8 @@ extension ImagesController: PageAware {
                 self.dropdownController.tableView.reloadData()
                 
                 if let album = self.library.albums.first {
+                    self.folderNameLabel.text = album.name
+                    self.arowImageView.isHidden = false
                     self.selectedAlbum = album
                     self.show(album: album)
                 }
@@ -162,6 +315,10 @@ extension ImagesController: CartDelegate {
     func cartDidReload(_ cart: Cart) {
         refreshView()
         refreshSelectedAlbum()
+    }
+    
+    func cart(_ cart: Cart, canAddNewItem: Bool) {
+        self.lockView.isHidden = canAddNewItem
     }
 }
 

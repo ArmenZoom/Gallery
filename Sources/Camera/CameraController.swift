@@ -181,6 +181,11 @@ extension CameraController: CartDelegate {
 //        cameraView.stackView.reload(cart.images)
         refreshView()
     }
+    
+    func cart(_ cart: Cart, canAddNewItem: Bool) {
+        
+    }
+
 }
 
 extension CameraController: PageAware {

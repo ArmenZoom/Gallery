@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import Photos
 
 extension AVAsset {
     
@@ -80,5 +81,11 @@ extension AVAsset {
         }
         
         return (object as! CMFormatDescription)
+    }
+}
+
+extension PHAsset {
+    var isVisible: Bool {
+        return self.duration >= Config.Limit.videoMinDuration && self.duration <= Config.Limit.videoMaxDuration
     }
 }

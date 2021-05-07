@@ -2,11 +2,42 @@ import UIKit
 import Photos
 
 class VideosLibrary {
-
-  
-    var items: [Video] = []
-    var fetchResults: PHFetchResult<PHAsset>?
+    
+    var albums: [Album] = []
     var albumsFetchResults = [PHFetchResult<PHAssetCollection>]()
+        
+    var names: [String] {
+        return albums.map { (album) -> String in
+            return album.name
+        }
+    }
+    
+    func findAlbumFromName(_ name: String) -> Album? {
+        for album in self.albums {
+            if album.name == name {
+                return album
+            }
+        }
+        return nil
+    }
+    
+    func getFolderNameFromIndex(index: Int) -> String? {
+        let names = self.names
+        if index < names.count && index >= 0 {
+            return names[index]
+        }
+        return nil
+    }
+    
+    func getItemsFromAlbumName(name: String) -> [Video] {
+        var videos: [Video] = []
+        for album in albums {
+            if name == album.name, let objs = album.items as? [Video] {
+                videos.append(contentsOf: objs)
+            }
+        }
+        return videos
+    }
 
   
     // MARK: - Initialization
@@ -35,25 +66,20 @@ class VideosLibrary {
             return PHAssetCollection.fetchAssetCollections(with: $0, subtype: .smartAlbumUserLibrary, options: nil)
         }
         
-        items = []
+        albums = []
+        let type: Config.GalleryTab = Config.tabsToShow == [.videoImageTab] ? .videoImageTab : .videoTab
+        
         for result in albumsFetchResults {
-            result.enumerateObjects({ (collection, _, _) in
-                if collection.assetCollectionSubtype == .smartAlbumUserLibrary {
-                    let itemsFetchResult = PHAsset.fetchAssets(in: collection, options: nil)
-                    itemsFetchResult.enumerateObjects({ (asset, count, stop) in
-                        if asset.mediaType == .video {
-                            if asset.duration >= Config.Limit.videoMinDuration && asset.duration <= Config.Limit.videoMaxDuration {
-                                self.items.insert(Video(asset: asset, isVideo: asset.duration != 0), at: 0)
-                            }
-                        } else if Config.tabsToShow == [.videoImageTab] && asset.mediaType == .image {
-                            self.items.insert(Video(asset: asset, isVideo: false), at: 0)
-                        }
-                    })
+            result.enumerateObjects({ (collection, count, _) in
+                let album = Album(name: collection.localizedTitle!, count: count, collection: collection, type: type)
+                album.reload()
+                
+                if !album.items.isEmpty {
+                    self.albums.append(album)
                 }
             })
         }
         
-        print(self.items.count)
     }
     
 }

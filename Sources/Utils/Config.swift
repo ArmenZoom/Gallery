@@ -159,4 +159,13 @@ public struct Config {
     public struct ImageCell {
         public static var borderVisibility: Bool = false
     }
+    
+    public struct LoackView {
+        public static var color: UIColor = UIColor.white
+        public static var alpha: CGFloat = 0.5
+    }
+    
+    public struct DropDown {
+        public static var isEnabled: Bool = false
+    }
 }
