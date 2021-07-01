@@ -73,9 +73,11 @@ public class Video: Equatable {
     ///
     /// - Parameter completion: Called when finish
     public func fetchAVAsset(_ completion: @escaping (AVAsset?) -> Void) {
-        PHImageManager.default().requestAVAsset(forVideo: asset, options: videoOptions) { avAsset, _, _ in
-            DispatchQueue.main.async {
-                completion(avAsset)
+        self.fetchURL { url in
+            if let url = url {
+                completion(AVAsset(url: url))
+            } else {
+                completion(nil)
             }
         }
     }
@@ -172,14 +174,64 @@ public class Video: Equatable {
             PHImageManager.default().requestAVAsset(forVideo: mPhasset, options: videoOptions, resultHandler: { (asset, audioMix, info) in
                 DispatchQueue.main.async {
                     if let urlAsset = asset as? AVURLAsset {
-                        let localVideoUrl = urlAsset.url
-                        completionHandler(localVideoUrl)
+                        if urlAsset.tracks(withMediaType: .video).count > 0 {
+                            let localVideoUrl = urlAsset.url
+                            completionHandler(localVideoUrl)
+                        } else {
+                            self.loadICloudVideo(url: urlAsset.url) { url in
+                                completionHandler(url)
+                            }
+                        }
                     } else {
                         completionHandler(nil)
                     }
                 }
             })
         }
+        
+    }
+    
+    func loadICloudVideo(url: URL, complation: @escaping (URL?)->()) {
+        DispatchQueue.global(qos: .background).async {
+            if  let urlData = NSData(contentsOf: url),
+                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+                let filePath="\(documentsPath)/\(self.randomString(length: 16)).\(url.pathExtension)"
+                DispatchQueue.main.async {
+                    urlData.write(toFile: filePath, atomically: true)
+                    PHPhotoLibrary.shared().performChanges({
+                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(fileURLWithPath: filePath))
+                    }) { completed, error in
+                        DispatchQueue.main.async {
+                            if completed {
+                                complation(URL(fileURLWithPath: filePath))
+                            } else {
+                                complation(nil)
+                            }
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    complation(nil)
+                }
+            }
+        }
+    }
+    
+    func randomString(length:Int) -> String {
+        
+        let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let len = UInt32(letters.length)
+        
+        var randomString = ""
+        
+        for _ in 0 ..< length {
+            let rand = arc4random_uniform(len)
+            var nextChar = letters.character(at: Int(rand))
+            randomString += NSString(characters: &nextChar, length: 1) as String
+        }
+        
+        return randomString
         
     }
     
