@@ -72,8 +72,8 @@ public class Video: Equatable {
     /// Fetch AVAsset asynchronoulys
     ///
     /// - Parameter completion: Called when finish
-    public func fetchAVAsset(iCloudSaveURL: URL, _ completion: @escaping (AVAsset?) -> Void) {
-        self.fetchURL(iCloudSaveURL: iCloudSaveURL, completion: { url in
+    public func fetchAVAsset(icloudSaveURL: URL, _ completion: @escaping (AVAsset?) -> Void) {
+        self.fetchURL(icloudSaveURL: icloudSaveURL, completion: { url in
             if let url = url {
                 completion(AVAsset(url: url))
             } else {
@@ -114,7 +114,7 @@ public class Video: Equatable {
         }
     }
     
-    public func customFetch(iCloudSaveURL: URL, completion: @escaping (_ originalImage: UIImage?, _ asset: AVAsset?, _ thumbnailImage: UIImage? ) -> Void) {
+    public func customFetch(icloudSaveURL: URL, completion: @escaping (_ originalImage: UIImage?, _ asset: AVAsset?, _ thumbnailImage: UIImage? ) -> Void) {
         
         var image: UIImage?
         var asset: AVAsset?
@@ -135,7 +135,7 @@ public class Video: Equatable {
         }
         
         if self.isVideo {
-            self.fetchAVAsset(iCloudSaveURL: iCloudSaveURL, { avasset in
+            self.fetchAVAsset(icloudSaveURL: icloudSaveURL, { avasset in
                 asset = avasset
                 if let img = image, let ast = avasset, !isAdded {
                     isAdded = true
@@ -153,13 +153,13 @@ public class Video: Equatable {
         }
     }
     
-    public func fetchURL(iCloudSaveURL: URL?, completion: @escaping (_ url: URL?) -> Void) {
-        self.getURL(ofPhotoWith: asset, iCloudSaveURL: iCloudSaveURL) { (url) in
+    public func fetchURL(icloudSaveURL: URL?, completion: @escaping (_ url: URL?) -> Void) {
+        self.getURL(ofPhotoWith: asset, icloudSaveURL: icloudSaveURL) { (url) in
             completion(url)
         }
     }
     
-    private func getURL(ofPhotoWith mPhasset: PHAsset, iCloudSaveURL: URL?, completionHandler : @escaping ((_ responseURL : URL?) -> Void)) {
+    private func getURL(ofPhotoWith mPhasset: PHAsset, icloudSaveURL: URL?, completionHandler : @escaping ((_ responseURL : URL?) -> Void)) {
         if mPhasset.mediaType == .image {
             let options: PHContentEditingInputRequestOptions = PHContentEditingInputRequestOptions()
             options.canHandleAdjustmentData = {(adjustmeta: PHAdjustmentData) -> Bool in
@@ -177,7 +177,7 @@ public class Video: Equatable {
                         if urlAsset.tracks(withMediaType: .video).count > 0 {
                             let localVideoUrl = urlAsset.url
                             completionHandler(localVideoUrl)
-                        } else if let saveURL = iCloudSaveURL {
+                        } else if let saveURL = icloudSaveURL {
                             self.loadICloudVideo(url: urlAsset.url, saveURL: saveURL) { url in
                                 completionHandler(url)
                             }

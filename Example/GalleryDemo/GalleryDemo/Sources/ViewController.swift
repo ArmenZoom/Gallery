@@ -131,7 +131,7 @@ class TutorialChooseVideoUploadViewController: UIViewController {
 
 extension TutorialChooseVideoUploadViewController: VideosControllerDelegate {
     func didAddVideo(video: Video) {
-        video.customFetch { (_, asset, thumbnail) in
+      video.customFetch(icloudSaveURL: URL()) { (_, asset, thumbnail) in
             DispatchQueue.main.async {
                 if self.currentIndex != -1 {
                     let model = self.uploadVideos[self.currentIndex]
