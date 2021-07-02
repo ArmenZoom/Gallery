@@ -11,21 +11,22 @@ public protocol VideoEditing: class {
 extension VideoEditing {
 
   public func process(video: Video, completion: @escaping (_ video: Video?, _ tempPath: URL?) -> Void) {
-    video.fetchAVAsset { avAsset in
-      guard let avAsset = avAsset else {
-        completion(nil, nil)
-        return
-      }
-
-      self.crop(avAsset: avAsset) { (outputURL: URL?) in
-        guard let outputURL = outputURL else {
-          completion(nil, nil)
-          return
-        }
-
-        self.handle(outputURL: outputURL, completion: completion)
-      }
-    }
+    completion(nil, nil)
+//    video.fetchAVAsset { avAsset in
+//      guard let avAsset = avAsset else {
+//        completion(nil, nil)
+//        return
+//      }
+//
+//      self.crop(avAsset: avAsset) { (outputURL: URL?) in
+//        guard let outputURL = outputURL else {
+//          completion(nil, nil)
+//          return
+//        }
+//
+//        self.handle(outputURL: outputURL, completion: completion)
+//      }
+//    }
   }
 
   func handle(outputURL: URL, completion: @escaping (_ video: Video?, _ tempPath: URL?) -> Void) {

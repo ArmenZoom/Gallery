@@ -72,14 +72,14 @@ public class Video: Equatable {
     /// Fetch AVAsset asynchronoulys
     ///
     /// - Parameter completion: Called when finish
-    public func fetchAVAsset(_ completion: @escaping (AVAsset?) -> Void) {
-        self.fetchURL { url in
+    public func fetchAVAsset(iCloudSaveURL: URL, _ completion: @escaping (AVAsset?) -> Void) {
+        self.fetchURL(iCloudSaveURL: iCloudSaveURL, completion: { url in
             if let url = url {
                 completion(AVAsset(url: url))
             } else {
                 completion(nil)
             }
-        }
+        })
     }
     
     /// Fetch thumbnail image for this video asynchronoulys
@@ -114,7 +114,7 @@ public class Video: Equatable {
         }
     }
     
-    public func customFetch(completion: @escaping (_ originalImage: UIImage?, _ asset: AVAsset?, _ thumbnailImage: UIImage? ) -> Void) {
+    public func customFetch(iCloudSaveURL: URL, completion: @escaping (_ originalImage: UIImage?, _ asset: AVAsset?, _ thumbnailImage: UIImage? ) -> Void) {
         
         var image: UIImage?
         var asset: AVAsset?
@@ -135,13 +135,13 @@ public class Video: Equatable {
         }
         
         if self.isVideo {
-            self.fetchAVAsset { (avasset) in
+            self.fetchAVAsset(iCloudSaveURL: iCloudSaveURL, { avasset in
                 asset = avasset
                 if let img = image, let ast = avasset, !isAdded {
                     isAdded = true
                     completion(nil, ast, img)
                 }
-            }
+            })
         } else {
             self.resolve { (originImage) in
                 originalImage = originImage
@@ -153,13 +153,13 @@ public class Video: Equatable {
         }
     }
     
-    public func fetchURL(completion: @escaping (_ url: URL?) -> Void) {
-        self.getURL(ofPhotoWith: asset) { (url) in
+    public func fetchURL(iCloudSaveURL: URL?, completion: @escaping (_ url: URL?) -> Void) {
+        self.getURL(ofPhotoWith: asset, iCloudSaveURL: iCloudSaveURL) { (url) in
             completion(url)
         }
     }
     
-    private func getURL(ofPhotoWith mPhasset: PHAsset, completionHandler : @escaping ((_ responseURL : URL?) -> Void)) {
+    private func getURL(ofPhotoWith mPhasset: PHAsset, iCloudSaveURL: URL?, completionHandler : @escaping ((_ responseURL : URL?) -> Void)) {
         if mPhasset.mediaType == .image {
             let options: PHContentEditingInputRequestOptions = PHContentEditingInputRequestOptions()
             options.canHandleAdjustmentData = {(adjustmeta: PHAdjustmentData) -> Bool in
@@ -174,13 +174,15 @@ public class Video: Equatable {
             PHImageManager.default().requestAVAsset(forVideo: mPhasset, options: videoOptions, resultHandler: { (asset, audioMix, info) in
                 DispatchQueue.main.async {
                     if let urlAsset = asset as? AVURLAsset {
-                        if urlAsset.tracks(withMediaType: .video).count > 0 {
+                        if urlAsset.tracks(withMediaType: .video).count > 0 && false {
                             let localVideoUrl = urlAsset.url
                             completionHandler(localVideoUrl)
-                        } else {
-                            self.loadICloudVideo(url: urlAsset.url) { url in
+                        } else if let saveURL = iCloudSaveURL {
+                            self.loadICloudVideo(url: urlAsset.url, saveURL: saveURL) { url in
                                 completionHandler(url)
                             }
+                        } else {
+                            completionHandler(nil)
                         }
                     } else {
                         completionHandler(nil)
@@ -191,23 +193,26 @@ public class Video: Equatable {
         
     }
     
-    func loadICloudVideo(url: URL, complation: @escaping (URL?)->()) {
+    func loadICloudVideo(url: URL, saveURL: URL, complation: @escaping (URL?)->()) {
         DispatchQueue.global(qos: .background).async {
-            if  let urlData = NSData(contentsOf: url),
-                let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-                let filePath="\(documentsPath)/\(self.randomString(length: 16)).\(url.pathExtension)"
+            if  let urlData = NSData(contentsOf: url){
                 DispatchQueue.main.async {
-                    urlData.write(toFile: filePath, atomically: true)
-                    PHPhotoLibrary.shared().performChanges({
-                        PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(fileURLWithPath: filePath))
-                    }) { completed, error in
-                        DispatchQueue.main.async {
-                            if completed {
-                                complation(URL(fileURLWithPath: filePath))
-                            } else {
-                                complation(nil)
-                            }
-                        }
+                    if urlData.write(toFile: saveURL.path, atomically: true) {
+                        complation(saveURL)
+//                        PHPhotoLibrary.shared().performChanges({
+//                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: saveURL)
+//                        }) { completed, error in
+//                            DispatchQueue.main.async {
+//                                print("error \(error?.localizedDescription ?? "empty")")
+//                                if completed {
+//                                    complation(saveURL)
+//                                } else {
+//                                    complation(nil)
+//                                }
+//                            }
+//                        }
+                    } else {
+                        complation(nil)
                     }
                 }
             } else {
