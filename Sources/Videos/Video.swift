@@ -174,7 +174,7 @@ public class Video: Equatable {
             PHImageManager.default().requestAVAsset(forVideo: mPhasset, options: videoOptions, resultHandler: { (asset, audioMix, info) in
                 DispatchQueue.main.async {
                     if let urlAsset = asset as? AVURLAsset {
-                        if urlAsset.tracks(withMediaType: .video).count > 0 && false {
+                        if urlAsset.tracks(withMediaType: .video).count > 0 {
                             let localVideoUrl = urlAsset.url
                             completionHandler(localVideoUrl)
                         } else if let saveURL = iCloudSaveURL {
