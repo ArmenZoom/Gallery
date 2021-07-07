@@ -175,15 +175,14 @@ public class Video: Equatable {
                 DispatchQueue.main.async {
                     if let urlAsset = asset as? AVURLAsset {
                         if urlAsset.tracks(withMediaType: .video).count > 0 {
-                            let localVideoUrl = urlAsset.url
-                            completionHandler(localVideoUrl)
+                            completionHandler(urlAsset.url)
                         } else if let saveURL = icloudSaveURL {
-                            self.loadICloudVideo(url: urlAsset.url, saveURL: saveURL) { url in
-                                completionHandler(url)
-                            }
+                            self.loadICloudVideo(url: urlAsset.url, saveURL: saveURL, complation: completionHandler)
                         } else {
                             completionHandler(nil)
                         }
+                    } else if let asset = asset, let saveURL = icloudSaveURL {
+                        self.saveVideoWithExportSession(asset, saveURL: saveURL, completion: completionHandler)
                     } else {
                         completionHandler(nil)
                     }
@@ -193,24 +192,24 @@ public class Video: Equatable {
         
     }
     
+    func saveVideoWithExportSession(_ asset: AVAsset, saveURL: URL, completion: @escaping (URL?)->Void) {
+        let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetMediumQuality)
+        exportSession?.outputURL = saveURL
+        exportSession?.outputFileType = .mp4
+        exportSession?.shouldOptimizeForNetworkUse = true
+        exportSession?.fileLengthLimit = 8000000
+        
+        exportSession?.exportAsynchronouslyCustom(url: saveURL, completionHandler: { (url, error) in
+            completion(url)
+        })
+    }
+    
     func loadICloudVideo(url: URL, saveURL: URL, complation: @escaping (URL?)->()) {
         DispatchQueue.global(qos: .background).async {
             if  let urlData = NSData(contentsOf: url){
                 DispatchQueue.main.async {
                     if urlData.write(toFile: saveURL.path, atomically: true) {
                         complation(saveURL)
-//                        PHPhotoLibrary.shared().performChanges({
-//                            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: saveURL)
-//                        }) { completed, error in
-//                            DispatchQueue.main.async {
-//                                print("error \(error?.localizedDescription ?? "empty")")
-//                                if completed {
-//                                    complation(saveURL)
-//                                } else {
-//                                    complation(nil)
-//                                }
-//                            }
-//                        }
                     } else {
                         complation(nil)
                     }
@@ -256,4 +255,31 @@ public class Video: Equatable {
 
 public func ==(lhs: Video, rhs: Video) -> Bool {
     return lhs.asset == rhs.asset
+}
+
+extension AVAssetExportSession {
+    func exportAsynchronouslyCustom(url: URL, deadline: DispatchTime = DispatchTime.now() + 30.0, completionHandler handler: @escaping (URL?, Error?) -> Void) {
+        
+        var compilationCompleted = false
+        
+        DispatchQueue.global().asyncAfter(deadline: deadline, execute: {
+            if !compilationCompleted {
+                compilationCompleted = true
+                self.cancelExport()
+                handler(nil, nil)
+            }
+        })
+        self.exportAsynchronously {
+            print("exportSession status value = ", self.status.rawValue)
+            if !compilationCompleted {
+                compilationCompleted = true
+                if self.error != nil {
+                    handler(nil, self.error)
+                } else {
+                    handler(url, nil)
+                }
+            }
+        }
+        
+    }
 }
